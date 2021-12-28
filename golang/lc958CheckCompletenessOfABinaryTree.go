@@ -8,12 +8,12 @@ package golang
 
 /**
  * Definition for a binary tree node.
+ * type TreeNode struct {
+ * 	 Val   int
+ * 	 Left  *TreeNode
+ * 	 Right *TreeNode
+ * }
  */
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
-}
 
 // 按照官方题解的思路
 // 每一次层级的最后一个元素的编号跟当前层级之前所有元素的个数一样

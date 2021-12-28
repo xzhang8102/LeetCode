@@ -8,13 +8,13 @@ package golang
 
 /**
  * Definition for a Node.
+ * type Node struct {
+ * 	 Val   int
+ * 	 Left  *Node
+ * 	 Right *Node
+ * 	 Next  *Node
+ * }
  */
-type Node struct {
-	Val   int
-	Left  *Node
-	Right *Node
-	Next  *Node
-}
 
 // @lc code=start
 func connect(root *Node) *Node {
