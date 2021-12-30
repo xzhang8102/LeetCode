@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func search(nums []int, target int) int {
+func lc704Search(nums []int, target int) int {
 	low, hi := 0, len(nums)-1
 	for low <= hi {
 		mid := (low + hi) >> 1
