@@ -43,12 +43,12 @@ func myAtoi(s string) int {
 		if state == IN_NUMBER {
 			num := s[i] - '0'
 			if negative {
-				if int(num) >= ans*10-math.MinInt32 {
+				if ans < math.MinInt32/10 || -int(num) <= math.MinInt32-ans*10 {
 					return math.MinInt32
 				}
 				ans = ans*10 - int(num)
 			} else {
-				if int(num) >= math.MaxInt32-ans*10 {
+				if ans > math.MaxInt32/10 || int(num) >= math.MaxInt32-ans*10 {
 					return math.MaxInt32
 				}
 				ans = ans*10 + int(num)
