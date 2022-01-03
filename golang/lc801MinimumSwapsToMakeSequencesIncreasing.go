@@ -28,11 +28,18 @@ func minSwap(nums1 []int, nums2 []int) int {
 		}
 		// 交叉检查 对于局部情况交叉检查就相当于真实交换
 		if nums1[i] > nums2[i-1] && nums2[i] > nums1[i-1] {
-			dp[i][0] = min(dp[i][0], dp[i-1][1])
-			dp[i][1] = min(dp[i][1], dp[i-1][0]+1)
+			dp[i][0] = lc801Min(dp[i][0], dp[i-1][1])
+			dp[i][1] = lc801Min(dp[i][1], dp[i-1][0]+1)
 		}
 	}
-	return min(dp[n-1][0], dp[n-1][1])
+	return lc801Min(dp[n-1][0], dp[n-1][1])
+}
+
+func lc801Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // @lc code=end

@@ -17,12 +17,12 @@ func minFlipsMonoIncr(s string) int {
 	for i := 1; i < n; i++ {
 		// 当前字符为0前一状态必不可能是1
 		dp[i][0] = dp[i-1][0] + int(s[i]-'0')
-		dp[i][1] = min(dp[i-1][0], dp[i-1][1]) + int('1'-s[i])
+		dp[i][1] = lc926Min(dp[i-1][0], dp[i-1][1]) + int('1'-s[i])
 	}
-	return min(dp[n-1][0], dp[n-1][1])
+	return lc926Min(dp[n-1][0], dp[n-1][1])
 }
 
-func min(a, b int) int {
+func lc926Min(a, b int) int {
 	if a < b {
 		return a
 	}
