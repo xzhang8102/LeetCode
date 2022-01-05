@@ -17,7 +17,7 @@ package golang
  */
 
 // @lc code=start
-func connect(root *Node) *Node {
+func lc116Connect(root *Node) *Node {
 	if root == nil {
 		return nil
 	}
