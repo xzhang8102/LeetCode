@@ -10,28 +10,19 @@ import "strings"
 
 // @lc code=start
 func simplifyPath(path string) string {
-	n := len(path)
-	fs := []string{""}
-	ptr := 0
-	for i := 0; i < n; {
-		start := i
-		for ; start < n && path[start] != '/'; start++ {
-		}
-		if start > i {
-			content := path[i:start]
-			if content == ".." {
-				if ptr > 0 {
-					fs = fs[:ptr]
-					ptr--
+	stack := []string{}
+	for _, name := range strings.Split(path, "/") {
+		if name != "" {
+			if name == ".." {
+				if len(stack) > 0 {
+					stack = stack[:len(stack)-1]
 				}
-			} else if content != "." {
-				fs = append(fs, content)
-				ptr++
+			} else if name != "." {
+				stack = append(stack, name)
 			}
 		}
-		i = start + 1
 	}
-	return "/" + strings.Join(fs[1:ptr+1], "/")
+	return "/" + strings.Join(stack, "/")
 }
 
 // @lc code=end
