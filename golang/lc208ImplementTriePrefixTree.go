@@ -12,7 +12,7 @@ type Trie struct {
 	next  [26]*Trie
 }
 
-func Constructor() Trie {
+func lc208Constructor() Trie {
 	return Trie{
 		false,
 		[26]*Trie{},
@@ -24,7 +24,7 @@ func (this *Trie) Insert(word string) {
 	for i := 0; i < n; i++ {
 		index := word[i] - 'a'
 		if node := this.next[index]; node == nil {
-			newNode := Constructor()
+			newNode := lc208Constructor()
 			this.next[index] = &newNode
 			this = &newNode
 		} else {
