@@ -24,21 +24,22 @@ package golang
 
 // @lc code=start
 func subsets(nums []int) [][]int {
-  result := make([][]int, 0)
-  result = append(result, make([]int, 0))
-  for i := range nums {
-    backtrack(&result, nums, &[]int{nums[i]}, i)
-  }
-  return result
+	ans := [][]int{}
+	var backtrack func(index int)
+	pick := []int{}
+	n := len(nums)
+	backtrack = func(index int) {
+		tmp := []int{}
+		tmp = append(tmp, pick...)
+		ans = append(ans, tmp)
+		for i := index; i < n; i++ {
+			pick = append(pick, nums[i])
+			backtrack(i + 1)
+			pick = pick[:len(pick)-1]
+		}
+	}
+	backtrack(0)
+	return ans
 }
 
-func backtrack(result *[][]int, nums []int, current *[]int ,index int) {
-  *result = append(*result, *current)
-  for i := index + 1; i < len(nums); i++ {
-    tmp := make([]int, len(*current))
-    copy(tmp, *current)
-    tmp = append(tmp, nums[i])
-    backtrack(result, nums, &tmp, i)
-  }
-}
 // @lc code=end
