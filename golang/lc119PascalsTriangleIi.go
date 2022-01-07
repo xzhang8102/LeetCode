@@ -8,16 +8,14 @@ package golang
 
 // @lc code=start
 func getRow(rowIndex int) []int {
-	cache := [][]int{{1}}
+	ans := make([]int, rowIndex+1)
+	ans[0] = 1
 	for i := 1; i <= rowIndex; i++ {
-		tmp := make([]int, i+1)
-		tmp[0], tmp[i] = 1, 1
-		for j := 1; j < i; j++ {
-			tmp[j] = cache[i-1][j-1] + cache[i-1][j]
+		for j := i; j > 0; j-- {
+			ans[j] += ans[j-1]
 		}
-		cache = append(cache, tmp)
 	}
-	return cache[rowIndex]
+	return ans
 }
 
 // @lc code=end
