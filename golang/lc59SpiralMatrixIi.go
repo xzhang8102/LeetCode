@@ -13,30 +13,21 @@ func generateMatrix(n int) [][]int {
 		ans[i] = make([]int, n)
 	}
 	fill := 1
-	for counter := 0; n > 0; counter, n = counter+1, n-1 {
-		row, col := counter, counter
-		for ; col < n; col++ {
-			ans[row][col] = fill
-			fill++
+	directions := [4][2]int{
+		{0, 1},
+		{1, 0},
+		{0, -1},
+		{-1, 0},
+	}
+	r, c, dir := 0, 0, 0
+	for fill <= n*n {
+		ans[r][c] = fill
+		fill++
+		newR, newC := r+directions[dir][0], c+directions[dir][1]
+		if newR < 0 || newR >= n || newC < 0 || newC >= n || ans[newR][newC] != 0 {
+			dir = (dir + 1) % 4
 		}
-		col--
-		row++
-		for ; row < n; row++ {
-			ans[row][col] = fill
-			fill++
-		}
-		row--
-		col--
-		for ; col >= counter; col-- {
-			ans[row][col] = fill
-			fill++
-		}
-		col++
-		row--
-		for ; row > counter; row-- {
-			ans[row][col] = fill
-			fill++
-		}
+		r, c = r+directions[dir][0], c+directions[dir][1]
 	}
 	return ans
 }
