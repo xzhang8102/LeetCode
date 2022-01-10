@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func rob(nums []int) int {
+func lc198Rob(nums []int) int {
 	n := len(nums)
 	if n <= 1 {
 		return nums[0]
