@@ -13,7 +13,7 @@ k = 3
 [#,#,#,1,2,3,4,5,6,7]
 [5,6,7,1,2,3,4]
 */
-func rotate(nums []int, k int) {
+func lc189Rotate(nums []int, k int) {
 	n := len(nums)
 	k = k % n
 	reverseArr(nums)
