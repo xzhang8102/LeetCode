@@ -9,23 +9,18 @@ package golang
 // @lc code=start
 func canJump(nums []int) bool {
 	n := len(nums)
-	dp := make([]bool, n)
-	if n == 0 {
-		return false
-	}
-	for i := n - 1; i >= 0; i-- {
-		next := i + nums[i]
-		dp[i] = next >= n-1
-		if !dp[i] {
-			for ; next > i; next-- {
-				if dp[next] {
-					dp[i] = true
-					break
-				}
+	maxPos := 0
+	for i, v := range nums {
+		if i <= maxPos {
+			if i+v > maxPos {
+				maxPos = i + v
+			}
+			if maxPos >= n-1 {
+				return true
 			}
 		}
 	}
-	return dp[0]
+	return false
 }
 
 // @lc code=end
