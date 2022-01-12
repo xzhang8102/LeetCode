@@ -1,5 +1,7 @@
 package golang
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=334 lang=golang
  *
@@ -8,24 +10,38 @@ package golang
 
 // @lc code=start
 func increasingTriplet(nums []int) bool {
-	pick := []int{}
-	var backtrack func(int) bool
-	backtrack = func(index int) bool {
-		if len(pick) == 3 {
-			return true
-		}
-		for i := index; i < len(nums); i++ {
-			if len(pick) == 0 || nums[i] > pick[len(pick)-1] {
-				pick = append(pick, nums[i])
-				if backtrack(i + 1) {
-					return true
-				}
-				pick = pick[:len(pick)-1]
-			}
-		}
+	n := len(nums)
+	if n < 3 {
 		return false
 	}
-	return len(nums) > 0 && backtrack(0)
+	leftMin, rightMax := make([]int, n), make([]int, n)
+	leftMin[0] = math.MaxInt32
+	for i := 1; i < n; i++ {
+		leftMin[i] = lc334Min(nums[i-1], leftMin[i-1])
+	}
+	for i := n - 2; i >= 0; i-- {
+		rightMax[i] = lc334Max(nums[i+1], rightMax[i+1])
+	}
+	for i := 1; i < n-1; i++ {
+		if nums[i] > leftMin[i] && nums[i] < rightMax[i] {
+			return true
+		}
+	}
+	return false
+}
+
+func lc334Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func lc334Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // @lc code=end
