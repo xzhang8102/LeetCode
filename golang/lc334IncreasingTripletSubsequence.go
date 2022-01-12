@@ -14,34 +14,18 @@ func increasingTriplet(nums []int) bool {
 	if n < 3 {
 		return false
 	}
-	leftMin, rightMax := make([]int, n), make([]int, n)
-	leftMin[0] = math.MaxInt32
-	for i := 1; i < n; i++ {
-		leftMin[i] = lc334Min(nums[i-1], leftMin[i-1])
-	}
-	for i := n - 2; i >= 0; i-- {
-		rightMax[i] = lc334Max(nums[i+1], rightMax[i+1])
-	}
-	for i := 1; i < n-1; i++ {
-		if nums[i] > leftMin[i] && nums[i] < rightMax[i] {
+	first, second := nums[0], math.MaxInt32
+	for _, v := range nums[1:] {
+		if v > second {
 			return true
+		}
+		if v <= first {
+			first = v
+		} else {
+			second = v
 		}
 	}
 	return false
-}
-
-func lc334Max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func lc334Min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
 
 // @lc code=end
