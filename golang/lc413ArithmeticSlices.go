@@ -12,23 +12,22 @@ func numberOfArithmeticSlices(nums []int) int {
 	if n < 3 {
 		return 0
 	}
-	valid := []int{}
 	ans := 0
-	for i := 1; i < n-1; i++ {
-		if nums[i]-nums[i-1] == nums[i+1]-nums[i] {
-			valid = append(valid, i)
-			ans++
+	gap, count := nums[0]-nums[1], 0
+	// 因为等差数列的长度至少为 3，所以可以从 i=2 开始枚举
+	/*
+		input: [1,2,3,4,5]
+								↑ [1,2,3] +1
+									↑ [2,3,4], [1,2,3,4] +2
+										↑ [2,3,4,5],[3,4,5],[1,2,3,4,5] +3
+	*/
+	for i := 2; i < n; i++ {
+		if nums[i-1]-nums[i] == gap {
+			count++
+		} else {
+			gap, count = nums[i-1]-nums[i], 0
 		}
-	}
-	for _, index := range valid {
-		gap := nums[index] - nums[index-1]
-		for i := index + 2; i < n; i++ {
-			if nums[i]-nums[i-1] == gap {
-				ans++
-			} else {
-				break
-			}
-		}
+		ans += count
 	}
 	return ans
 }
