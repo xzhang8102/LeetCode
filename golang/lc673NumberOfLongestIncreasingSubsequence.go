@@ -9,29 +9,30 @@ package golang
 // @lc code=start
 func findNumberOfLIS(nums []int) int {
 	n := len(nums)
-	if n == 0 {
-		return 0
-	}
 	ans := 0
-	maxLen := 1
-	pick := []int{}
-	var backtrack func(int)
-	backtrack = func(index int) {
-		if len(pick) > maxLen {
-			maxLen = len(pick)
-			ans = 1
-		} else if len(pick) == maxLen {
-			ans++
-		}
-		for i := index; i < n; i++ {
-			if len(pick) == 0 || nums[i] > pick[len(pick)-1] {
-				pick = append(pick, nums[i])
-				backtrack(i + 1)
-				pick = pick[:len(pick)-1]
+	maxLen := 0
+	dp := make([]int, n) // max length of LIS end with number at index i
+	count := make([]int, n)
+	for i := 0; i < n; i++ {
+		dp[i] = 1
+		count[i] = 1
+		for j := i - 1; j >= 0; j-- {
+			if nums[j] < nums[i] {
+				if dp[j]+1 > dp[i] {
+					dp[i] = dp[j] + 1
+					count[i] = count[j]
+				} else if dp[j]+1 == dp[i] {
+					count[i] += count[j]
+				}
 			}
 		}
+		if dp[i] > maxLen {
+			maxLen = dp[i]
+			ans = count[i]
+		} else if dp[i] == maxLen {
+			ans += count[i]
+		}
 	}
-	backtrack(0)
 	return ans
 }
 
