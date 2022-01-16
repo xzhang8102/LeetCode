@@ -19,7 +19,7 @@ type MyHashMap struct {
 	data []list.List
 }
 
-func Constructor() MyHashMap {
+func lc706Constructor() MyHashMap {
 	res := MyHashMap{
 		make([]list.List, base),
 	}
