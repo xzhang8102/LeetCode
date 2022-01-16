@@ -1,8 +1,6 @@
 package golang
 
-import (
-	"math/rand"
-)
+import "math/rand"
 
 /*
  * @lc app=leetcode.cn id=382 lang=golang
@@ -19,20 +17,21 @@ import (
  * }
  */
 type Solution struct {
-	data []int
+	head *ListNode
 }
 
 func Constructor(head *ListNode) Solution {
-	solution := new(Solution)
-	solution.data = []int{}
-	for ptr := head; ptr != nil; ptr = ptr.Next {
-		solution.data = append(solution.data, ptr.Val)
-	}
-	return *solution
+	return Solution{head}
 }
 
 func (this *Solution) GetRandom() int {
-	return this.data[rand.Intn(len(this.data))]
+	ans := this.head.Val
+	for ptr, idx := this.head, 1; ptr != nil; ptr, idx = ptr.Next, idx+1 {
+		if rand.Intn(idx) == 0 {
+			ans = ptr.Val
+		}
+	}
+	return ans
 }
 
 /**
