@@ -7,27 +7,52 @@ package golang
  */
 
 // @lc code=start
-func countVowelPermutation(n int) int {
-	const mod int = 1e9 + 7
-	dp := [5]int{1, 1, 1, 1, 1}
-	for L := 1; L < n; L++ {
-		// a - 0 e - 1 i - 2 o - 3 u - 4
-		// a - e
-		// e - a/i
-		// i - a/e/o/u
-		// o - i/u
-		// u - a
-		dp = [5]int{
-			(dp[1] + dp[2] + dp[4]) % mod,
-			(dp[0] + dp[2]) % mod,
-			(dp[1] + dp[3]) % mod,
-			dp[2],
-			(dp[2] + dp[3]) % mod,
+const mod int = 1e9 + 7
+
+type lc1220Matrix [5][5]int
+
+func (a lc1220Matrix) mul(b lc1220Matrix) lc1220Matrix {
+	res := lc1220Matrix{}
+	for i, row := range a {
+		for j := range b[0] {
+			for k, v := range row {
+				res[i][j] = (res[i][j] + v*b[k][j]) % mod
+			}
 		}
 	}
+	return res
+}
+
+func (a lc1220Matrix) pow(n int) lc1220Matrix {
+	res := lc1220Matrix{}
+	for i := range res {
+		res[i][i] = 1
+	}
+	for ; n > 0; n >>= 1 {
+		if n&1 > 0 {
+			res = res.mul(a)
+		}
+		if n > 1 {
+			a = a.mul(a)
+		}
+	}
+	return res
+}
+
+func countVowelPermutation(n int) int {
+	m := lc1220Matrix{
+		{0, 1, 0, 0, 0},
+		{1, 0, 1, 0, 0},
+		{1, 1, 0, 1, 1},
+		{0, 0, 1, 0, 1},
+		{1, 0, 0, 0, 0},
+	}
+	mut := m.pow(n - 1)
 	ans := 0
-	for _, v := range dp {
-		ans = (ans + v) % mod
+	for _, row := range mut {
+		for _, v := range row {
+			ans = (ans + v) % mod
+		}
 	}
 	return ans
 }
