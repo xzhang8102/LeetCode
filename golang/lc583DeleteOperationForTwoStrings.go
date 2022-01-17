@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func minDistance(word1 string, word2 string) int {
+func lc583MinDistance(word1 string, word2 string) int {
 	len1, len2 := len(word1), len(word2)
 	dp := make([][]int, len1+1)
 	for i := range dp {
