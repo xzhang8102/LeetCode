@@ -12,33 +12,28 @@ import (
 
 // @lc code=start
 func coinChange(coins []int, amount int) int {
-	memo := make([]int, amount+1)
-	var dp func(int) int
-	dp = func(remain int) int {
-		if remain < 0 {
-			return -1
-		}
-		if remain == 0 {
-			return 0
-		}
-		if memo[remain] != 0 {
-			return memo[remain]
-		}
-		min := math.MaxInt32
-		for _, val := range coins {
-			res := dp(remain - val)
-			if res >= 0 && res+1 < min {
-				min = res + 1
+	dp := make([]int, amount+1)
+	for remain := 1; remain <= amount; remain++ {
+		res := math.MaxInt32
+		for _, coin := range coins {
+			if remain-coin >= 0 && dp[remain-coin] >= 0 {
+				res = lc322Min(res, dp[remain-coin]+1)
 			}
 		}
-		if min != math.MaxInt32 {
-			memo[remain] = min
+		if res != math.MaxInt32 {
+			dp[remain] = res
 		} else {
-			memo[remain] = -1
+			dp[remain] = -1
 		}
-		return memo[remain]
 	}
-	return dp(amount)
+	return dp[amount]
+}
+
+func lc322Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // @lc code=end
