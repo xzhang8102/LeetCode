@@ -2,8 +2,7 @@ package golang
 
 import (
 	"math"
-	"strconv"
-	"strings"
+	"sort"
 )
 
 /*
@@ -14,46 +13,31 @@ import (
 
 // @lc code=start
 func findMinDifference(timePoints []string) int {
-	ans := math.MaxInt32
-	n := len(timePoints)
-	pick := []string{}
-	var backtrack func(int)
-	backtrack = func(index int) {
-		if len(pick) == 2 {
-			tmp := lc539Diff(pick[0], pick[1])
-			if tmp < ans {
-				ans = tmp
-			}
-			return
-		}
-		for i := index; i < n; i++ {
-			pick = append(pick, timePoints[i])
-			backtrack(i + 1)
-			pick = pick[:len(pick)-1]
-		}
+	if len(timePoints) <= 1 || len(timePoints) > 1440 {
+		return 0
 	}
-	backtrack(0)
+	sort.Strings(timePoints)
+	ans := math.MaxInt32
+	firstMins := lc539GetMinutes(timePoints[0])
+	prevMins := firstMins
+	for _, t := range timePoints[1:] {
+		mins := lc539GetMinutes(t)
+		ans = lc539Min(ans, mins-prevMins)
+		prevMins = mins
+	}
+	ans = lc539Min(ans, firstMins+1440-prevMins)
 	return ans
 }
 
-func lc539Diff(time1, time2 string) int {
-	input1, input2 := lc539Parse(time1), lc539Parse(time2)
-	if input1 > input2 {
-		input1, input2 = input2, input1
-	}
-	diff1 := input2 - input1
-	diff2 := input1 + lc539Parse("24:00") - input2
-	if diff1 < diff2 {
-		return diff1
-	}
-	return diff2
+func lc539GetMinutes(input string) int {
+	return (int(input[0]-'0')*10+int(input[1]-'0'))*60 + int(input[3]-'0')*10 + int(input[4]-'0')
 }
 
-func lc539Parse(input string) int {
-	minSec := strings.Split(input, ":")
-	min, _ := strconv.Atoi(minSec[0])
-	sec, _ := strconv.Atoi(minSec[1])
-	return min*60 + sec
+func lc539Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // @lc code=end
