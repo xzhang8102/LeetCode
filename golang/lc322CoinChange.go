@@ -2,7 +2,6 @@ package golang
 
 import (
 	"math"
-	"sort"
 )
 
 /*
@@ -13,36 +12,33 @@ import (
 
 // @lc code=start
 func coinChange(coins []int, amount int) int {
-	n := len(coins)
-	sort.Ints(coins)
-	ans := math.MaxInt32
-	pick := 0
-	var backtrack func(int, int)
-	backtrack = func(index, remain int) {
+	memo := make([]int, amount+1)
+	var dp func(int) int
+	dp = func(remain int) int {
 		if remain < 0 {
-			return
+			return -1
 		}
 		if remain == 0 {
-			if pick < ans {
-				ans = pick
-			}
-			return
+			return 0
 		}
-		for i := index; i >= 0; i-- {
-			for count := remain / coins[i]; count > 0; count-- {
-				pick += count
-				if pick < ans {
-					backtrack(i-1, remain-count*coins[i])
-				}
-				pick -= count
+		if memo[remain] != 0 {
+			return memo[remain]
+		}
+		min := math.MaxInt32
+		for _, val := range coins {
+			res := dp(remain - val)
+			if res >= 0 && res+1 < min {
+				min = res + 1
 			}
 		}
+		if min != math.MaxInt32 {
+			memo[remain] = min
+		} else {
+			memo[remain] = -1
+		}
+		return memo[remain]
 	}
-	backtrack(n-1, amount)
-	if ans == math.MaxInt32 {
-		return -1
-	}
-	return ans
+	return dp(amount)
 }
 
 // @lc code=end
