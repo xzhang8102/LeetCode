@@ -16,15 +16,15 @@ import "math/rand"
  *     Next *ListNode
  * }
  */
-type Solution struct {
+type lc382Solution struct {
 	head *ListNode
 }
 
-func Constructor(head *ListNode) Solution {
-	return Solution{head}
+func lc382Constructor(head *ListNode) lc382Solution {
+	return lc382Solution{head}
 }
 
-func (this *Solution) GetRandom() int {
+func (this *lc382Solution) GetRandom() int {
 	ans := this.head.Val
 	for ptr, idx := this.head, 1; ptr != nil; ptr, idx = ptr.Next, idx+1 {
 		if rand.Intn(idx) == 0 {
