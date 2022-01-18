@@ -8,17 +8,21 @@ package golang
 
 // @lc code=start
 func isHappy(n int) bool {
-	visited := map[int]bool{}
-	for n != 1 && !visited[n] {
-		visited[n] = true
-		tmp := 0
-		for n > 0 {
-			tmp += (n % 10) * (n % 10)
-			n /= 10
-		}
-		n = tmp
+	slow, fast := n, lc202GetNext(n)
+	for fast != 1 && fast != slow {
+		slow = lc202GetNext(slow)
+		fast = lc202GetNext(lc202GetNext(fast))
 	}
-	return n == 1
+	return fast == 1
+}
+
+func lc202GetNext(n int) int {
+	tmp := 0
+	for n > 0 {
+		tmp += (n % 10) * (n % 10)
+		n /= 10
+	}
+	return tmp
 }
 
 // @lc code=end
