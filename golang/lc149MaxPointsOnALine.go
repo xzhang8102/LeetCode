@@ -1,5 +1,7 @@
 package golang
 
+import "fmt"
+
 /*
  * @lc app=leetcode.cn id=149 lang=golang
  *
@@ -13,24 +15,50 @@ func maxPoints(points [][]int) int {
 		return n
 	}
 	ans := 2
-	for p1 := 0; p1 < n; p1++ {
-		for p2 := p1 + 1; p2 < n; p2++ {
-			count := 2
-			for p3 := p2 + 1; p3 < n; p3++ {
-				var (
-					s1 = (points[p2][1] - points[p1][1]) * (points[p3][0] - points[p2][0])
-					s2 = (points[p3][1] - points[p2][1]) * (points[p2][0] - points[p1][0])
-				)
-				if s1 == s2 {
-					count++
+	for i, p1 := range points {
+		slope := map[string]int{}
+		for _, p2 := range points[i+1:] {
+			x, y := p1[0]-p2[0], p1[1]-p2[1]
+			if x == 0 {
+				y = 1
+			} else if y == 0 {
+				x = 1
+			} else {
+				if y < 0 {
+					x, y = -x, -y
 				}
+				g := lc149Gcd(lc149Abs(x), lc149Abs(y))
+				x /= g
+				y /= g
 			}
-			if count > ans {
-				ans = count
+			k := fmt.Sprintf("%d-%d", y, x)
+			if count, ok := slope[k]; ok {
+				slope[k] = count + 1
+			} else {
+				slope[k] = 2
+			}
+		}
+		for _, c := range slope {
+			if c > ans {
+				ans = c
 			}
 		}
 	}
 	return ans
+}
+
+func lc149Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func lc149Gcd(x, y int) int {
+	for x != 0 {
+		x, y = y%x, x
+	}
+	return y
 }
 
 // @lc code=end
