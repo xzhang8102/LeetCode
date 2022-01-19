@@ -9,26 +9,23 @@ package golang
 // @lc code=start
 func missingElement(nums []int, k int) int {
 	n := len(nums)
-	total := nums[n-1] - nums[0] + 1 - n
-	if total < k {
-		return nums[n-1] + k - total
+	if lc1060Missing(n-1, nums) < k {
+		return nums[n-1] + k - lc1060Missing(n-1, nums)
 	}
-	for lo, hi := 0, n-1; lo <= hi; {
+	lo, hi := 0, n-1
+	for lo != hi {
 		mid := lo + (hi-lo)/2
-		curr := nums[mid] - nums[0] - mid
-		if mid == 0 {
-			return nums[0] + k
-		}
-		prev := nums[mid-1] - nums[0] - mid + 1
-		if k > prev && k <= curr {
-			return nums[mid-1] + k - prev
-		} else if k <= prev {
-			hi = mid - 1
-		} else {
+		if lc1060Missing(mid, nums) < k {
 			lo = mid + 1
+		} else {
+			hi = mid
 		}
 	}
-	return -1
+	return nums[lo-1] + k - lc1060Missing(lo-1, nums)
+}
+
+func lc1060Missing(index int, nums []int) int {
+	return nums[index] - nums[0] - index
 }
 
 // @lc code=end
