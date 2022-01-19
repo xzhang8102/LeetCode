@@ -8,15 +8,12 @@ package golang
 
 // @lc code=start
 func containsNearbyDuplicate(nums []int, k int) bool {
-	window := map[int]struct{}{}
+	seen := map[int]int{}
 	for i := 0; i < len(nums); i++ {
-		if i > k {
-			delete(window, nums[i-k-1])
-		}
-		if _, ok := window[nums[i]]; ok {
+		if index, ok := seen[nums[i]]; ok && i-index <= k {
 			return true
 		}
-		window[nums[i]] = struct{}{}
+		seen[nums[i]] = i
 	}
 	return false
 }
