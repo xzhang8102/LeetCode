@@ -8,8 +8,8 @@ package golang
 
 // @lc code=start
 func removePalindromeSub(s string) int {
-	for l, r := 0, len(s)-1; l < r; l, r = l+1, r-1 {
-		if s[l] != s[r] {
+	for i, n := 0, len(s); i < n/2; i++ {
+		if s[i] != s[n-1-i] {
 			return 2
 		}
 	}
