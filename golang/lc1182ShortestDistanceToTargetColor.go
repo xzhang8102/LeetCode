@@ -1,9 +1,6 @@
 package golang
 
-import (
-	"math"
-	"sort"
-)
+import "math"
 
 /*
  * @lc app=leetcode.cn id=1182 lang=golang
@@ -13,26 +10,43 @@ import (
 
 // @lc code=start
 func shortestDistanceColor(colors []int, queries [][]int) []int {
-	mapping := map[int][]int{}
-	for index, color := range colors {
-		mapping[color] = append(mapping[color], index)
+	n := len(colors)
+	left, right := make([][3]int, n), make([][3]int, n)
+	for i := range left {
+		left[i] = [3]int{-1, -1, -1}
+		right[i] = [3]int{-1, -1, -1}
 	}
-	ans := make([]int, len(queries))
-	for i, query := range queries {
-		colorArr := mapping[query[1]]
-		if len(colorArr) == 0 {
-			ans[i] = -1
-			continue
+	for i := 0; i < n; i++ {
+		for c := 0; c < 3; c++ {
+			if i > 0 && left[i-1][c] != -1 {
+				left[i][c] = left[i-1][c] + 1
+			}
 		}
-		idx := sort.SearchInts(colorArr, query[0])
+		left[i][colors[i]-1] = 0
+	}
+	for i := n - 1; i >= 0; i-- {
+		for c := 0; c < 3; c++ {
+			if i < n-1 && right[i+1][c] != -1 {
+				right[i][c] = right[i+1][c] + 1
+			}
+		}
+		right[i][colors[i]-1] = 0
+	}
+	ans := []int{}
+	for _, q := range queries {
+		disLeft, disRight := left[q[0]][q[1]-1], right[q[0]][q[1]-1]
 		min := math.MaxInt32
-		if idx > 0 {
-			min = lc1182Min(min, query[0]-colorArr[idx-1])
+		if disLeft != -1 {
+			min = lc1182Min(min, disLeft)
 		}
-		if idx < len(colorArr) {
-			min = lc1182Min(min, colorArr[idx]-query[0])
+		if disRight != -1 {
+			min = lc1182Min(min, disRight)
 		}
-		ans[i] = min
+		if min == math.MaxInt32 {
+			ans = append(ans, -1)
+		} else {
+			ans = append(ans, min)
+		}
 	}
 	return ans
 }
