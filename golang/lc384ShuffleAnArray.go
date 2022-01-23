@@ -15,7 +15,7 @@ type Solution struct {
 	data []int
 }
 
-func Constructor(nums []int) Solution {
+func lc384Constructor(nums []int) Solution {
 	return Solution{
 		nums,
 	}
