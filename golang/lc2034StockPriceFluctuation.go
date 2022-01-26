@@ -24,7 +24,7 @@ type StockPrice struct {
 	latest             int
 }
 
-func Constructor() StockPrice {
+func lc2034Constructor() StockPrice {
 	return StockPrice{timePriceMap: map[int]int{}}
 }
 
