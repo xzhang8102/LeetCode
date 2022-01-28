@@ -7,7 +7,15 @@ type user struct {
 	email string
 }
 
+type notifier interface {
+	notify()
+}
+
 func (u *user) notify() { fmt.Printf("Sending user email To %s<%s>\n", u.name, u.email) }
+
+func sendNotification(n notifier) {
+	n.notify()
+}
 
 type admin struct {
 	*user
@@ -23,4 +31,5 @@ func main() {
 	ad.user.notify()
 	u.name = "william smith"
 	ad.notify() // Outer type promotion
+	sendNotification(&ad)
 }
