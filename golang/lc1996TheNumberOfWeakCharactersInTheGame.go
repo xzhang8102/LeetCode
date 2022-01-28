@@ -11,16 +11,16 @@ import "sort"
 // @lc code=start
 func numberOfWeakCharacters(properties [][]int) int {
 	sort.SliceStable(properties, func(i, j int) bool {
-		return properties[i][0] > properties[j][0] || (properties[i][0] == properties[j][0] && properties[i][1] < properties[j][1])
+		return properties[i][0] < properties[j][0] || (properties[i][0] == properties[j][0] && properties[i][1] > properties[j][1])
 	})
 	ans := 0
-	maxDef := 0
-	for _, prop := range properties {
-		if prop[1] < maxDef {
+	stack := []int{}
+	for _, p := range properties {
+		for len(stack) > 0 && stack[len(stack)-1] < p[1] {
+			stack = stack[:len(stack)-1]
 			ans++
-		} else {
-			maxDef = prop[1]
 		}
+		stack = append(stack, p[1])
 	}
 	return ans
 }
