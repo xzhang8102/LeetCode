@@ -8,24 +8,14 @@ package golang
 
 // @lc code=start
 func longestOnes(nums []int, k int) int {
-	ans, count := 0, 0
-	n := len(nums)
-	for left, right := 0, 0; right < n; {
-		if nums[right] == 0 {
-			if count < k {
-				count++
-				ans = lc1004Max(ans, right-left+1)
-				right++
-			} else {
-				if nums[left] == 0 {
-					count--
-				}
-				left++
-			}
-		} else {
-			ans = lc1004Max(ans, right-left+1)
-			right++
+	var ans, left, lsum, rsum int
+	for right, v := range nums {
+		rsum += 1 - v
+		for lsum < rsum-k {
+			lsum += 1 - nums[left]
+			left++
 		}
+		ans = lc1004Max(ans, right-left+1)
 	}
 	return ans
 }
