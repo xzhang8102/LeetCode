@@ -40,25 +40,14 @@ func highestPeak(isWater [][]int) [][]int {
 			h := ans[r][c]
 			for _, dir := range directions {
 				newR, newC := r+dir[0], c+dir[1]
-				if newR >= 0 && newR < row && newC >= 0 && newC < col {
-					if ans[newR][newC] == -1 {
-						ans[newR][newC] = h + 1
-						q = append(q, pair{newR, newC})
-					} else {
-						ans[newR][newC] = lc1765Min(ans[newR][newC], h+1)
-					}
+				if newR >= 0 && newR < row && newC >= 0 && newC < col && ans[newR][newC] == -1 {
+					ans[newR][newC] = h + 1 // visited height must be lower than the height currently visiting
+					q = append(q, pair{newR, newC})
 				}
 			}
 		}
 	}
 	return ans
-}
-
-func lc1765Min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
 
 // @lc code=end
