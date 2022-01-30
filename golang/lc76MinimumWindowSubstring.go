@@ -1,7 +1,5 @@
 package golang
 
-import "math"
-
 /*
  * @lc app=leetcode.cn id=76 lang=golang
  *
@@ -14,11 +12,19 @@ func minWindow(s string, t string) string {
 	if m > n {
 		return ""
 	}
-	min := math.MaxInt32
+	min := n + 1
 	var ans string
 	cache := map[byte]int{}
 	for i := 0; i < m; i++ {
 		cache[t[i]]++
+	}
+	check := func() bool {
+		for _, v := range cache {
+			if v > 0 {
+				return false
+			}
+		}
+		return true
 	}
 	stack := []int{}
 	for right := 0; right < n; right++ {
@@ -26,21 +32,13 @@ func minWindow(s string, t string) string {
 			stack = append(stack, right)
 			cache[s[right]]--
 		}
-		valid := true
-		for len(stack) >= m && valid {
-			for _, v := range cache {
-				if v > 0 {
-					valid = false
-				}
+		for len(stack) >= m && check() {
+			if right-stack[0]+1 < min {
+				ans = s[stack[0] : right+1]
+				min = len(ans)
 			}
-			if valid {
-				if right-stack[0]+1 < min {
-					ans = s[stack[0] : right+1]
-					min = len(ans)
-				}
-				cache[s[stack[0]]]++
-				stack = stack[1:]
-			}
+			cache[s[stack[0]]]++
+			stack = stack[1:]
 		}
 	}
 	return ans
