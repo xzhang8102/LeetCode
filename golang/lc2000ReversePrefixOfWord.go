@@ -1,5 +1,7 @@
 package golang
 
+import "strings"
+
 /*
  * @lc app=leetcode.cn id=2000 lang=golang
  *
@@ -8,21 +10,16 @@ package golang
 
 // @lc code=start
 func reversePrefix(word string, ch byte) string {
-	n := len(word)
-	buf := make([]byte, n)
-	index := -1
-	for i := 0; i < n; i++ {
-		buf[n-i-1] = word[i]
-		if word[i] == ch {
-			index = i
-			break
-		}
-	}
-	if index == -1 {
+	right := strings.IndexByte(word, ch)
+	if right < 0 {
 		return word
-	} else {
-		return string(buf[n-1-index:]) + word[index+1:]
 	}
+	s := []byte(word)
+	for left := 0; left < right; left++ {
+		s[left], s[right] = s[right], s[left]
+		right--
+	}
+	return string(s)
 }
 
 // @lc code=end
