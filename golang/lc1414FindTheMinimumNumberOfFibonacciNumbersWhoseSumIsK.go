@@ -8,16 +8,17 @@ package golang
 
 // @lc code=start
 func findMinFibonacciNumbers(k int) int {
-	fib := []int{}
-	for i, j := 1, 1; i <= k; i, j = i+j, i {
-		fib = append(fib, i)
+	first, second := 1, 1
+	for first <= k {
+		first, second = first+second, first
 	}
 	ans := 0
-	for i := len(fib) - 1; k > 0; i-- {
-		if k >= fib[i] {
+	for k > 0 {
+		if k-second >= 0 {
+			k -= second
 			ans++
-			k -= fib[i]
 		}
+		first, second = second, first-second
 	}
 	return ans
 }
