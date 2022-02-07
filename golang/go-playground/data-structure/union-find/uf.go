@@ -38,7 +38,7 @@ func (uf *UnionFind) Union(a, b int) {
 	}
 }
 
-func (uf *UnionFind) isConnected(a, b int) bool {
+func (uf *UnionFind) IsConnected(a, b int) bool {
 	return uf.find(a) == uf.find(b)
 }
 
@@ -48,6 +48,6 @@ func main() {
 	uf.Union(1, 2)
 	uf.Union(2, 3)
 	uf.Union(3, 9)
-	fmt.Println(uf.isConnected(0, 9))
+	fmt.Println(uf.IsConnected(0, 9))
 	fmt.Println(uf.Connections)
 }
