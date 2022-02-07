@@ -45,9 +45,13 @@ func (grid bubbleGrid) popBubbles(darts [][]int) []int {
 			changed := 0
 			for r := 0; r < row; r++ {
 				for c := 0; c < col; c++ {
-					if grid[r][c] == 1 && !uf.IsConnected(r*col+c, dummy) {
-						grid[r][c] = 0
-						changed++
+					if grid[r][c] == 1 {
+						if !uf.IsConnected(r*col+c, dummy) {
+							grid[r][c] = 0
+							changed++
+						} else {
+							uf.Disconnect(r*col + c)
+						}
 					}
 				}
 			}

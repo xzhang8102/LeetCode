@@ -42,6 +42,14 @@ func (uf *UnionFind) IsConnected(a, b int) bool {
 	return uf.find(a) == uf.find(b)
 }
 
+func (uf *UnionFind) Disconnect(a int) {
+	if uf.parents[a] >= 0 {
+		root := uf.find(a)
+		uf.parents[root]++
+		uf.parents[a] = -1
+	}
+}
+
 func main() {
 	uf := NewUnionFind(10) // 0..9
 	uf.Union(0, 1)
