@@ -16,14 +16,9 @@ func NewUnionFind(size int) *UnionFind {
 }
 
 func (uf *UnionFind) find(val int) int {
-	path := []int{}
-	for uf.parents[val] >= 0 {
-		path = append(path, val)
-		val = uf.parents[val]
-	}
-	// now `val` is parent's index
-	for index := range path { // path compression
-		uf.parents[index] = val
+	if uf.parents[val] >= 0 {
+		uf.parents[val] = uf.find(uf.parents[val]) // path compression
+		return uf.parents[val]
 	}
 	return val
 }
