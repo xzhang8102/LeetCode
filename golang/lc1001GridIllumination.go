@@ -8,62 +8,41 @@ package golang
 
 // @lc code=start
 func gridIllumination(n int, lamps [][]int, queries [][]int) []int {
-	luminDict := map[int]map[int]bool{} // id in grid: id of lamp
+	// -- row; | col; / left; \ right
+	row, col, left, right := map[int]int{}, map[int]int{}, map[int]int{}, map[int]int{}
+	lampSet := map[int]bool{}
 	for _, lamp := range lamps {
-		for _, id := range lc1001GetSurround(n, n, lamp) {
-			lampId := lamp[0]*n + lamp[1]
-			if luminDict[id] == nil {
-				luminDict[id] = map[int]bool{}
-			}
-			luminDict[id][lampId] = true
+		y, x := lamp[0], lamp[1]
+		lampId := y*n + x
+		if !lampSet[lampId] {
+			lampSet[lampId] = true
+			row[y]++
+			col[x]++
+			left[y-x]++
+			right[y+x]++
 		}
 	}
-	ans := []int{}
+	ans := make([]int, 0, len(queries))
+	directions := [9][2]int{{0, 0}, {0, -1}, {0, 1}, {-1, 0}, {-1, -1}, {-1, 1}, {1, 0}, {1, -1}, {1, 1}}
 	for _, query := range queries {
-		r, c := query[0], query[1]
-		if _, ok := luminDict[r*n+c]; ok {
+		y, x := query[0], query[1]
+		if row[y] > 0 || col[x] > 0 || left[y-x] > 0 || right[y+x] > 0 {
 			ans = append(ans, 1)
 		} else {
 			ans = append(ans, 0)
 		}
-		for _, off := range lc1001GetSurround(n, 2, query) {
-			for id, light := range luminDict {
-				if light[off] {
-					delete(light, off)
-				}
-				if len(light) == 0 {
-					delete(luminDict, id)
-				}
+		for _, dir := range directions {
+			newY, newX := y+dir[0], x+dir[1]
+			if newY >= 0 && newY < n && newX >= 0 && newX < n && lampSet[newY*n+newX] {
+				row[newY]--
+				col[newX]--
+				left[newY-newX]--
+				right[newY+newX]--
+				delete(lampSet, newY*n+newX)
 			}
 		}
 	}
 	return ans
-}
-
-func lc1001GetSurround(n, limit int, lamp []int) []int {
-	directions := [8][2]int{
-		{-1, -1},
-		{-1, 0},
-		{-1, 1},
-		{0, 1},
-		{1, 1},
-		{1, 0},
-		{1, -1},
-		{0, -1},
-	}
-	res := []int{}
-	r, c := lamp[0], lamp[1]
-	res = append(res, r*n+c)
-	for _, dir := range directions {
-		for i := 1; i < n && i < limit; i++ {
-			newR, newC := r+i*dir[0], c+i*dir[1]
-			if newR < 0 || newR >= n || newC < 0 || newC >= n {
-				break
-			}
-			res = append(res, newR*n+newC)
-		}
-	}
-	return res
 }
 
 // @lc code=end
