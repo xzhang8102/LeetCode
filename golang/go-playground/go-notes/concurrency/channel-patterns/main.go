@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"runtime"
+	"sync"
 	"time"
 )
 
@@ -125,6 +126,83 @@ func cancellation() {
 	time.Sleep(time.Second)
 }
 
+func fanOutSem() {
+	children := 2000
+	ch := make(chan string, children)
+
+	g := runtime.GOMAXPROCS(0)
+	sem := make(chan bool, g)
+
+	for c := 0; c < children; c++ {
+		go func(child int) {
+			sem <- true // only `g` Goroutines are gonna run at the same time
+			{
+				time.Sleep(time.Duration(rand.Intn(200)) * time.Millisecond)
+				ch <- "data"
+				fmt.Println("child: sent signal :", child)
+			}
+			<-sem
+		}(c)
+	}
+
+	for children > 0 {
+		d := <-ch
+		children--
+		fmt.Println(d)
+		fmt.Println("parent : recv'd signal :", children)
+	}
+	time.Sleep(time.Second)
+}
+
+func boundedWorkPooling() {
+	work := []string{"paper", "paper", "paper", "paper", 2000: "paper"}
+	g := runtime.GOMAXPROCS(0)
+	var wg sync.WaitGroup
+	wg.Add(g)
+
+	ch := make(chan string, g)
+	for c := 0; c < g; c++ {
+		go func(child int) {
+			defer wg.Done()
+			for wrk := range ch {
+				fmt.Printf("child %d : recv'd signal : %s\n", child, wrk)
+			}
+			fmt.Printf("child %d : recv'd shutdown signal\n", child)
+		}(c)
+	}
+
+	for _, wrk := range work {
+		ch <- wrk
+	}
+	close(ch)
+	wg.Wait()
+}
+
+func retryTimeout(ctx context.Context, retryInterval time.Duration, check func(context.Context) error) {
+	for {
+		fmt.Println("perform user check call")
+		if err := check(ctx); err == nil {
+			fmt.Println("work finished successfully")
+			return
+		}
+		fmt.Println("check if timeout has expired")
+		if ctx.Err() != nil {
+			fmt.Println("time expired 1 :", ctx.Err())
+			return
+		}
+		fmt.Printf("wait %s before trying again\n", retryInterval)
+		t := time.NewTimer(retryInterval)
+		select {
+		case <-ctx.Done():
+			fmt.Println("time expired 2 :", ctx.Err())
+			t.Stop()
+			return
+		case <-t.C:
+			fmt.Println("retry again")
+		}
+	}
+}
+
 func main() {
-	cancellation()
+	boundedWorkPooling()
 }
