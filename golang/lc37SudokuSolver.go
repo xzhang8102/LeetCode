@@ -8,24 +8,15 @@ package golang
 
 // @lc code=start
 func solveSudoku(board [][]byte) {
-	totalSlots, row, col, block := 0, map[int]map[byte]bool{}, map[int]map[byte]bool{}, map[int]map[byte]bool{}
+	totalSlots, row, col, block := 0, [9][9]bool{}, [9][9]bool{}, [9][9]bool{}
 	for r := 0; r < 9; r++ {
 		for c := 0; c < 9; c++ {
-			if row[r] == nil {
-				row[r] = map[byte]bool{}
-			}
-			if col[c] == nil {
-				col[c] = map[byte]bool{}
-			}
-			blockId := (r/3)*3 + c/3
-			if block[blockId] == nil {
-				block[blockId] = map[byte]bool{}
-			}
 			char := board[r][c]
 			if char != '.' {
-				row[r][char] = true
-				col[c][char] = true
-				block[blockId][char] = true
+				blockId := (r/3)*3 + c/3
+				row[r][char-'1'] = true
+				col[c][char-'1'] = true
+				block[blockId][char-'1'] = true
 			} else {
 				totalSlots++
 			}
@@ -36,27 +27,23 @@ func solveSudoku(board [][]byte) {
 	backtrack = func(r, c int) {
 		if board[r][c] == '.' {
 			blockId := (r/3)*3 + c/3
-			availble := []byte{}
 			for char := byte('9'); char > '0'; char-- {
-				if !row[r][char] && !col[c][char] && !block[blockId][char] {
-					availble = append(availble, char)
+				if !row[r][char-'1'] && !col[c][char-'1'] && !block[blockId][char-'1'] {
+					board[r][c] = char
+					row[r][char-'1'] = true
+					col[c][char-'1'] = true
+					block[blockId][char-'1'] = true
+					filled++
+					backtrack(r, c)
+					if filled == totalSlots {
+						return
+					}
+					board[r][c] = '.'
+					row[r][char-'1'] = false
+					col[c][char-'1'] = false
+					block[blockId][char-'1'] = false
+					filled--
 				}
-			}
-			for _, fill := range availble {
-				board[r][c] = fill
-				row[r][fill] = true
-				col[c][fill] = true
-				block[blockId][fill] = true
-				filled++
-				backtrack(r, c)
-				if filled == totalSlots {
-					return
-				}
-				board[r][c] = '.'
-				row[r][fill] = false
-				col[c][fill] = false
-				block[blockId][fill] = false
-				filled--
 			}
 		} else {
 			if filled == totalSlots {
