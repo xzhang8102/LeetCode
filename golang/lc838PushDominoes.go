@@ -1,7 +1,5 @@
 package golang
 
-import "bytes"
-
 /*
  * @lc app=leetcode.cn id=838 lang=golang
  *
@@ -10,45 +8,35 @@ import "bytes"
 
 // @lc code=start
 func pushDominoes(dominoes string) string {
-	n := len(dominoes)
-	q := []int{}
-	time := make([]int, n)
-	for i := range time {
-		time[i] = -1
-	}
-	force := make([][]byte, n)
-	for i, ch := range dominoes {
-		if ch != '.' {
-			q = append(q, i)
-			time[i] = 0
-			force[i] = append(force[i], byte(ch))
+	s := []byte(dominoes)
+	i, n := 0, len(s)
+	leftForce := byte('L')
+	for i < n {
+		j := i
+		for j < n && s[j] == '.' { // 找到一段连续'.'
+			j++
 		}
-	}
-	ans := bytes.Repeat([]byte{'.'}, n)
-	for len(q) > 0 {
-		i := q[0]
-		q = q[1:]
-		if len(force[i]) > 1 { // forces from both sides
-			continue
+		rightForce := byte('R')
+		if j < n {
+			rightForce = s[j]
 		}
-		f := force[i][0]
-		ans[i] = f
-		next := i - 1
-		if f == 'R' {
-			next = i + 1
-		}
-		if next >= 0 && next < n {
-			t := time[i]
-			if time[next] == -1 {
-				q = append(q, next)
-				time[next] = t + 1
-				force[next] = append(force[next], f)
-			} else if time[next] == t+1 {
-				force[next] = append(force[next], f)
+		// 检查该段骨牌的两侧的力
+		// 如果同向
+		if leftForce == rightForce {
+			for i < j {
+				s[i] = leftForce
+				i++
+			}
+			// 如果相对
+		} else if leftForce == byte('R') && rightForce == byte('L') {
+			for k := j - 1; i < k; i, k = i+1, k-1 {
+				s[i], s[k] = leftForce, rightForce // 两面向中间推
 			}
 		}
+		leftForce = rightForce
+		i = j + 1
 	}
-	return string(ans)
+	return string(s)
 }
 
 // @lc code=end
