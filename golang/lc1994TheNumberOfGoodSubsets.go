@@ -42,7 +42,7 @@ func numberOfGoodSubsets(nums []int) int {
 			continue
 		}
 		for prev := mask - 1; prev >= 0; prev-- {
-			if (prev & curr) == 0 {
+			if (prev&curr) == 0 && f[prev] > 0 {
 				f[prev|curr] = (f[prev|curr] + f[prev]*freq[i]) % mod
 			}
 		}
