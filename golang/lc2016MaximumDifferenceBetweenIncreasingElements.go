@@ -13,14 +13,13 @@ func maximumDifference(nums []int) int {
 	if n < 2 {
 		return -1
 	}
-	for left, right := 0, 0; right < n; {
-		if left == right || nums[right] > nums[left] {
-			if right > left && nums[right]-nums[left] > ans {
-				ans = nums[right] - nums[left]
+	for i, preMin := 1, nums[0]; i < n; i++ {
+		if nums[i] > preMin {
+			if nums[i]-preMin > ans {
+				ans = nums[i] - preMin
 			}
-			right++
 		} else {
-			left++
+			preMin = nums[i]
 		}
 	}
 	return ans
