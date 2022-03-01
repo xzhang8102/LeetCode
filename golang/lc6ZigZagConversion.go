@@ -10,28 +10,24 @@ import "strings"
 
 // @lc code=start
 func convert(s string, numRows int) string {
-	if numRows <= 1 {
+	n := len(s)
+	if numRows <= 1 || numRows >= n {
 		return s
 	}
-	buffer := make([][]byte, 0)
-	for i := 0; i < numRows; i++ {
-		buffer = append(buffer, []byte{})
+	cache := make([][]byte, numRows)
+	for i := range cache {
+		cache[i] = make([]byte, 0)
 	}
-	n := len(s)
-	for i, row, dir := 0, 0, 1; i < n; i++ {
-		buffer[row] = append(buffer[row], s[i])
-		if row == 0 {
-			dir = 1
+	for i, dir, rowN := 0, -1, 0; i < n; i, rowN = i+1, rowN+dir {
+		cache[rowN] = append(cache[rowN], s[i])
+		if rowN == numRows-1 || rowN == 0 {
+			dir *= -1
 		}
-		if row == numRows-1 {
-			dir = -1
-		}
-		row += dir
 	}
 	var b strings.Builder
 	b.Grow(n)
-	for _, r := range buffer {
-		b.Write(r)
+	for _, row := range cache {
+		b.Write(row)
 	}
 	return b.String()
 }
