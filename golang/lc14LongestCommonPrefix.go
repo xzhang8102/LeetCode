@@ -1,10 +1,5 @@
 package golang
 
-import (
-	"sort"
-	"strings"
-)
-
 /*
  * @lc app=leetcode.cn id=14 lang=golang
  *
@@ -13,28 +8,26 @@ import (
 
 // @lc code=start
 func longestCommonPrefix(strs []string) string {
-	n := len(strs)
-	if n == 1 {
+	if len(strs) == 1 {
 		return strs[0]
 	}
-	sort.SliceStable(strs, func(i, j int) bool { return len(strs[i]) < len(strs[j]) })
-	var b strings.Builder
-	for i := 0; i < len(strs[0]); i++ {
-		char := strs[0][i]
-		valid := true
-		for j := 1; j < n; j++ {
-			if strs[j][i] != char {
-				valid = false
-				break
-			}
+	if len(strs) == 2 {
+		str1, str2 := strs[0], strs[1]
+		n := lc14Min(len(str1), len(str2))
+		i := 0
+		for ; i < n && str1[i] == str2[i]; i++ {
 		}
-		if valid {
-			b.WriteByte(char)
-		} else {
-			break
-		}
+		return str1[:i]
 	}
-	return b.String()
+	mid := len(strs) >> 1
+	return longestCommonPrefix([]string{longestCommonPrefix(strs[:mid]), longestCommonPrefix(strs[mid:])})
+}
+
+func lc14Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // @lc code=end
