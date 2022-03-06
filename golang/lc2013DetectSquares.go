@@ -11,7 +11,7 @@ type DetectSquares struct {
 	coords map[int]map[int]int // x : y : count
 }
 
-func Constructor() DetectSquares {
+func lc2013Constructor() DetectSquares {
 	return DetectSquares{
 		map[int]map[int]int{},
 	}
