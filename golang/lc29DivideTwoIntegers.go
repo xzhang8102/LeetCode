@@ -14,48 +14,34 @@ func divide(dividend int, divisor int) int {
 		return 0
 	}
 	ans := 0
-	switch {
-	case dividend > 0 && divisor > 0:
-		if divisor == 1 {
-			return dividend
+	size := 32 << (^uint(0) >> 63)
+	negatvie := ((dividend ^ divisor) >> (size - 1) & 0x1) == 1
+	dividend = lc29Abs(dividend)
+	divisor = lc29Abs(divisor)
+	for dividend >= divisor {
+		i := 1
+		for tmp := divisor; dividend >= tmp; i, tmp = i<<1, tmp<<1 {
+			dividend -= tmp
+			ans += i
 		}
-		for dividend >= divisor {
-			ans++
-			dividend -= divisor
-		}
-	case dividend < 0 && divisor < 0:
-		if divisor == -1 {
-			if dividend == math.MinInt32 {
-				return math.MaxInt32
-			}
-			return -dividend
-		}
-		for dividend <= divisor {
-			ans++
-			dividend -= divisor
-		}
-	case dividend > 0 && divisor < 0:
-		if divisor == -1 {
-			return -dividend
-		}
-		divisor = -divisor
-		for dividend >= divisor {
-			ans++
-			dividend -= divisor
-		}
-		ans *= -1
-	case dividend < 0 && divisor > 0:
-		if divisor == 1 {
-			return dividend
-		}
-		dividend = -dividend
-		for dividend >= divisor {
-			ans++
-			dividend -= divisor
-		}
+	}
+	if negatvie {
 		ans *= -1
 	}
+	if ans > math.MaxInt32 {
+		return math.MaxInt32
+	}
+	if ans < math.MinInt32 {
+		return math.MinInt32
+	}
 	return ans
+}
+
+func lc29Abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
 }
 
 // @lc code=end
