@@ -9,28 +9,37 @@ package golang
 // @lc code=start
 func countHighestScoreNodes(parents []int) int {
 	n := len(parents)
-	childNum := make([]int, n)
 	childMap := map[int][]int{}
-	for i := 0; i < n; i++ {
-		childNum[i]++
-		if i > 0 {
-			for curr := i; parents[curr] != -1; {
-				childNum[parents[curr]]++
-				curr = parents[curr]
-			}
-			if childMap[parents[i]] == nil {
-				childMap[parents[i]] = []int{i}
-			} else {
-				childMap[parents[i]] = append(childMap[parents[i]], i)
-			}
+	for i := 1; i < n; i++ {
+		if childMap[parents[i]] == nil {
+			childMap[parents[i]] = []int{i}
+		} else {
+			childMap[parents[i]] = append(childMap[parents[i]], i)
 		}
 	}
 	ans := 0
 	max := -1
+	childNum := make([]int, n)
+	var dfs func(parent int)
+	dfs = func(parent int) {
+		if childNum[parent] != 0 {
+			return
+		}
+		if childMap[parent] == nil {
+			childNum[parent] = 1
+		} else {
+			childNum[parent] = 1
+			for _, child := range childMap[parent] {
+				dfs(child)
+				childNum[parent] += childNum[child]
+			}
+		}
+	}
+	dfs(0)
 	for i := 0; i < n; i++ {
 		product := 1
 		if i > 0 {
-			product *= childNum[0] - childNum[i]
+			product = n - childNum[i]
 		}
 		for _, child := range childMap[i] {
 			product *= childNum[child]
