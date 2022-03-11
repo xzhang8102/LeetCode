@@ -19,38 +19,26 @@ func countHighestScoreNodes(parents []int) int {
 	}
 	ans := 0
 	max := -1
-	childNum := make([]int, n)
-	var dfs func(parent int)
-	dfs = func(parent int) {
-		if childNum[parent] != 0 {
-			return
+	var dfs func(parent int) int
+	dfs = func(parent int) int {
+		score, size := 1, 1
+		for _, child := range childMap[parent] {
+			cut := dfs(child)
+			score *= cut
+			size += cut
 		}
-		if childMap[parent] == nil {
-			childNum[parent] = 1
-		} else {
-			childNum[parent] = 1
-			for _, child := range childMap[parent] {
-				dfs(child)
-				childNum[parent] += childNum[child]
-			}
+		if size < n {
+			score *= n - size
 		}
+		if score == max {
+			ans++
+		} else if score > max {
+			ans = 1
+			max = score
+		}
+		return size
 	}
 	dfs(0)
-	for i := 0; i < n; i++ {
-		product := 1
-		if i > 0 {
-			product = n - childNum[i]
-		}
-		for _, child := range childMap[i] {
-			product *= childNum[child]
-		}
-		if i == 0 || product > max {
-			ans = 1
-			max = product
-		} else if product == max {
-			ans++
-		}
-	}
 	return ans
 }
 
