@@ -8,20 +8,21 @@ package golang
 
 // @lc code=start
 func longestValidParentheses(s string) int {
-	stack := []int{-1}
+	n := len(s)
+	dp := make([]int, n)
 	ans := 0
-	for i, char := range s {
-		if char == '(' {
-			stack = append(stack, i)
-		} else {
-			if len(stack) == 1 && stack[0] == -1 {
-				stack[0] = i
-			} else if s[stack[len(stack)-1]] == '(' {
-				stack = stack[:len(stack)-1]
-				ans = lc32Max(ans, i-stack[len(stack)-1])
-			} else {
-				stack = append(stack, i)
+	for i := 1; i < n; i++ {
+		if s[i] == ')' {
+			preLen := dp[i-1]
+			preMatch := i - preLen - 1
+			if preMatch >= 0 && s[preMatch] == '(' {
+				dp[i] = dp[i-1] + 2
+
+				if preMatch-1 >= 0 {
+					dp[i] += dp[preMatch-1]
+				}
 			}
+			ans = lc32Max(ans, dp[i])
 		}
 	}
 	return ans
