@@ -14,7 +14,7 @@ package golang
  *     Next *ListNode
  * }
  */
-func deleteDuplicates(head *ListNode) *ListNode {
+func lc82deleteDuplicates(head *ListNode) *ListNode {
 	dummy := ListNode{
 		Next: head,
 	}
