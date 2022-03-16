@@ -22,16 +22,16 @@ func inorderTraversal(root *TreeNode) []int {
 			ans = append(ans, root.Val)
 			root = root.Right
 		} else {
-			preprocessor := root.Left
-			for preprocessor.Right != nil && preprocessor.Right != root {
-				preprocessor = preprocessor.Right
+			predecessor := root.Left
+			for predecessor.Right != nil && predecessor.Right != root {
+				predecessor = predecessor.Right
 			}
-			if preprocessor.Right == nil {
-				preprocessor.Right = root
+			if predecessor.Right == nil {
+				predecessor.Right = root
 				root = root.Left
 			} else {
 				ans = append(ans, root.Val)
-				preprocessor.Right = nil
+				predecessor.Right = nil
 				root = root.Right
 			}
 		}
