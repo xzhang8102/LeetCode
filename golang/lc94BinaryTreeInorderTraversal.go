@@ -17,23 +17,22 @@ package golang
  */
 func inorderTraversal(root *TreeNode) []int {
 	ans := []int{}
-	stack := []interface{}{}
-	if root != nil {
-		stack = append(stack, root)
-	}
-	for len(stack) > 0 {
-		top := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
-		if val, ok := top.(int); ok {
-			ans = append(ans, val)
+	for root != nil {
+		if root.Left == nil {
+			ans = append(ans, root.Val)
+			root = root.Right
 		} else {
-			node := top.(*TreeNode)
-			if node.Right != nil {
-				stack = append(stack, node.Right)
+			preprocessor := root.Left
+			for preprocessor.Right != nil && preprocessor.Right != root {
+				preprocessor = preprocessor.Right
 			}
-			stack = append(stack, node.Val)
-			if node.Left != nil {
-				stack = append(stack, node.Left)
+			if preprocessor.Right == nil {
+				preprocessor.Right = root
+				root = root.Left
+			} else {
+				ans = append(ans, root.Val)
+				preprocessor.Right = nil
+				root = root.Right
 			}
 		}
 	}
