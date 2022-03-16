@@ -12,7 +12,7 @@ type NumArray struct {
 	sum  []int
 }
 
-func Constructor(nums []int) NumArray {
+func lc303Constructor(nums []int) NumArray {
 	n := len(nums)
 	arr := make([]int, n)
 	arr[0] = nums[0]
