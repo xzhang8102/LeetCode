@@ -9,7 +9,7 @@ import "sort"
  */
 
 // @lc code=start
-func merge(intervals [][]int) [][]int {
+func lc56merge(intervals [][]int) [][]int {
 	ans := [][]int{}
 	n := len(intervals)
 	if n == 0 {
