@@ -13,20 +13,21 @@ import (
 
 // @lc code=start
 func countAndSay(n int) string {
-	if n == 1 {
-		return "1"
-	}
-	var ans strings.Builder
-	str := countAndSay(n - 1)
-	for i := 0; i < len(str); {
-		j := i + 1
-		for ; j < len(str) && str[j] == str[i]; j++ {
+	ans := "1"
+	for n > 1 {
+		var b strings.Builder
+		for i := 0; i < len(ans); {
+			j := i + 1
+			for ; j < len(ans) && ans[j] == ans[i]; j++ {
+			}
+			b.WriteString(strconv.Itoa(j - i))
+			b.WriteByte(ans[i])
+			i = j
 		}
-		ans.WriteString(strconv.Itoa(j - i))
-		ans.WriteByte(str[i])
-		i = j
+		ans = b.String()
+		n--
 	}
-	return ans.String()
+	return ans
 }
 
 // @lc code=end
