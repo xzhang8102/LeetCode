@@ -19,7 +19,7 @@ type AllOne struct {
 	nodeMap map[string]*list.Element
 }
 
-func Constructor() AllOne {
+func lc432Constructor() AllOne {
 	return AllOne{list.New(), map[string]*list.Element{}}
 }
 
