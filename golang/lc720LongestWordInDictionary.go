@@ -1,7 +1,5 @@
 package golang
 
-import "sort"
-
 /*
  * @lc app=leetcode.cn id=720 lang=golang
  *
@@ -9,18 +7,44 @@ import "sort"
  */
 
 // @lc code=start
+type lc720TridNode struct {
+	isEnd bool
+	child [26]*lc720TridNode
+}
+
+func (trie *lc720TridNode) insert(word string) {
+	ptr := trie
+	for _, ch := range word {
+		idx := ch - 'a'
+		if ptr.child[idx] == nil {
+			ptr.child[idx] = new(lc720TridNode)
+		}
+		ptr = ptr.child[idx]
+	}
+	ptr.isEnd = true
+}
+
+func (trie *lc720TridNode) search(word string) bool {
+	ptr := trie
+	for _, ch := range word {
+		idx := ch - 'a'
+		if ptr.child[idx] == nil || !ptr.child[idx].isEnd { // every character should be an end
+			return false
+		}
+		ptr = ptr.child[idx]
+	}
+	return true
+}
+
 func longestWord(words []string) string {
-	sort.SliceStable(words, func(i, j int) bool {
-		s, t := words[i], words[j]
-		// make sure to process the word with smaller lexicographical order later
-		return len(s) < len(t) || len(s) == len(t) && s > t
-	})
-	candidates := map[string]bool{"": true}
+	trie := new(lc720TridNode)
+	for _, word := range words {
+		trie.insert(word)
+	}
 	longest := ""
 	for _, word := range words {
-		if candidates[word[:len(word)-1]] {
+		if trie.search(word) && (len(word) > len(longest) || len(word) == len(longest) && word < longest) {
 			longest = word
-			candidates[word] = true
 		}
 	}
 	return longest
