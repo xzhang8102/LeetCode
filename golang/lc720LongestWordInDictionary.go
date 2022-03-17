@@ -1,5 +1,7 @@
 package golang
 
+import "sort"
+
 /*
  * @lc app=leetcode.cn id=720 lang=golang
  *
@@ -8,43 +10,20 @@ package golang
 
 // @lc code=start
 func longestWord(words []string) string {
-	dict := map[int]map[string]bool{}
-	maxLen := 0
+	sort.SliceStable(words, func(i, j int) bool {
+		s, t := words[i], words[j]
+		// make sure to process the word with smaller lexicographical order later
+		return len(s) < len(t) || len(s) == len(t) && s > t
+	})
+	candidates := map[string]bool{"": true}
+	longest := ""
 	for _, word := range words {
-		length := len(word)
-		if length > maxLen {
-			maxLen = length
-		}
-		if dict[length] == nil {
-			dict[length] = map[string]bool{word: true}
-		} else {
-			dict[length][word] = true
+		if candidates[word[:len(word)-1]] {
+			longest = word
+			candidates[word] = true
 		}
 	}
-	candidates := dict[1]
-	if candidates == nil {
-		return ""
-	}
-	for i := 2; i <= maxLen; i++ {
-		tmp := map[string]bool{}
-		for s := range dict[i] {
-			if candidates[s[:i-1]] {
-				tmp[s] = true
-			}
-		}
-		if len(tmp) == 0 {
-			break
-		} else {
-			candidates = tmp
-		}
-	}
-	ans := ""
-	for s := range candidates {
-		if ans == "" || s < ans {
-			ans = s
-		}
-	}
-	return ans
+	return longest
 }
 
 // @lc code=end
