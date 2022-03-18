@@ -16,7 +16,7 @@ type LRUCache struct {
 	capacity int
 }
 
-func Constructor(capacity int) LRUCache {
+func lc146Constructor(capacity int) LRUCache {
 	return LRUCache{
 		list.New(),
 		map[int]*list.Element{},
