@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func maxDepth(s string) int {
+func lc1614maxDepth(s string) int {
 	ans := 0
 	n := len(s)
 	ptr := 0 // index of left parenthesis
