@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func isMatch(s string, p string) bool {
+func lc10isMatch(s string, p string) bool {
 	row, col := len(s), len(p)
 	dp := make([][]bool, row+1)
 	for i := range dp {
