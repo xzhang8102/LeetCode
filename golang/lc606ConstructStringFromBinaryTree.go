@@ -43,13 +43,13 @@ func tree2str(root *TreeNode) string {
 			if node != root {
 				stack = append(stack, node.Val)
 			}
-			if node.Left == nil {
+			if node.Left == nil && node.Right != nil {
 				b.WriteString("()")
+			}
+			if node.Right != nil {
 				stack = append(stack, node.Right)
-			} else {
-				if node.Right != nil {
-					stack = append(stack, node.Right)
-				}
+			}
+			if node.Left != nil {
 				stack = append(stack, node.Left)
 			}
 		} else {
