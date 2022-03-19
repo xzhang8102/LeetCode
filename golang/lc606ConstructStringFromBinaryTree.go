@@ -1,6 +1,9 @@
 package golang
 
-import "fmt"
+import (
+	"strconv"
+	"strings"
+)
 
 /*
  * @lc app=leetcode.cn id=606 lang=golang
@@ -21,13 +24,39 @@ func tree2str(root *TreeNode) string {
 	if root == nil {
 		return ""
 	}
-	if root.Left == nil && root.Right == nil {
-		return fmt.Sprintf("%d", root.Val)
+	var b strings.Builder
+	stack := []interface{}{root}
+	for len(stack) > 0 {
+		ele := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if node, ok := ele.(*TreeNode); ok {
+			if node != root {
+				b.WriteByte('(')
+			}
+			b.WriteString(strconv.Itoa(node.Val))
+			if node.Left == nil && node.Right == nil {
+				if node != root {
+					b.WriteByte(')')
+				}
+				continue
+			}
+			if node != root {
+				stack = append(stack, node.Val)
+			}
+			if node.Left == nil {
+				b.WriteString("()")
+				stack = append(stack, node.Right)
+			} else {
+				if node.Right != nil {
+					stack = append(stack, node.Right)
+				}
+				stack = append(stack, node.Left)
+			}
+		} else {
+			b.WriteByte(')')
+		}
 	}
-	if root.Right == nil {
-		return fmt.Sprintf("%d(%s)", root.Val, tree2str(root.Left))
-	}
-	return fmt.Sprintf("%d(%s)(%s)", root.Val, tree2str(root.Left), tree2str(root.Right))
+	return b.String()
 }
 
 // @lc code=end
