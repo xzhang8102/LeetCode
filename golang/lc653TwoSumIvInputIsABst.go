@@ -16,23 +16,37 @@ package golang
  * }
  */
 func findTarget(root *TreeNode, k int) bool {
-	cache := map[int]bool{}
-	found := false
-	var dfs func(node *TreeNode)
-	dfs = func(node *TreeNode) {
-		if node == nil || found {
-			return
-		}
-		if cache[k-node.Val] {
-			found = true
-			return
-		}
-		cache[node.Val] = true
-		dfs(node.Left)
-		dfs(node.Right)
+	left, right := root, root
+	leftStk := []*TreeNode{left}
+	for left.Left != nil {
+		leftStk = append(leftStk, left.Left)
+		left = left.Left
 	}
-	dfs(root)
-	return found
+	rightStk := []*TreeNode{right}
+	for right.Right != nil {
+		rightStk = append(rightStk, right.Right)
+		right = right.Right
+	}
+	for left != right {
+		sum := left.Val + right.Val
+		if sum == k {
+			return true
+		}
+		if sum < k {
+			left = leftStk[len(leftStk)-1]
+			leftStk = leftStk[:len(leftStk)-1]
+			for node := left.Right; node != nil; node = node.Left {
+				leftStk = append(leftStk, node)
+			}
+		} else {
+			right = rightStk[len(rightStk)-1]
+			rightStk = rightStk[:len(rightStk)-1]
+			for node := right.Left; node != nil; node = node.Right {
+				rightStk = append(rightStk, node)
+			}
+		}
+	}
+	return false
 }
 
 // @lc code=end
