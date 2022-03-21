@@ -1,7 +1,5 @@
 package golang
 
-import "math"
-
 /*
  * @lc app=leetcode.cn id=50 lang=golang
  *
@@ -10,31 +8,23 @@ import "math"
 
 // @lc code=start
 func myPow(x float64, n int) float64 {
-	if n == 0 {
-		return 1.0
+	if n >= 0 {
+		return lc50QuickMul(x, n)
 	}
-	if x == 0.0 {
-		if n < 0 {
-			return math.Inf(1)
-		}
-		return 0
-	}
-	if n < 0 {
-		x = 1 / x
-		n = -n
-	}
-	var pow func(x float64, n int) float64
-	pow = func(x float64, n int) float64 {
-		if n == 1 {
-			return x
-		}
-		m := pow(x, n/2)
+	return 1.0 / lc50QuickMul(x, -n)
+}
+
+func lc50QuickMul(x float64, n int) float64 {
+	ans := 1.0
+	xContribution := x
+	for n > 0 {
 		if n&1 == 1 {
-			return m * m * x
+			ans *= xContribution
 		}
-		return m * m
+		xContribution *= xContribution
+		n /= 2
 	}
-	return pow(x, n)
+	return ans
 }
 
 // @lc code=end
