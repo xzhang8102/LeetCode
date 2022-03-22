@@ -13,7 +13,7 @@ type Bank struct {
 	balance []int64
 }
 
-func Constructor(balance []int64) Bank {
+func lc2043Constructor(balance []int64) Bank {
 	return Bank{
 		balance,
 	}
