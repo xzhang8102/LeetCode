@@ -1,5 +1,7 @@
 package golang
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=155 lang=golang
  *
@@ -14,24 +16,23 @@ type MinStack struct {
 
 func Constructor() MinStack {
 	return MinStack{
-		[]int{},
+		[]int{math.MaxInt64},
 		[]int{},
 	}
 }
 
 func (this *MinStack) Push(val int) {
 	this.data = append(this.data, val)
-	if len(this.minStack) == 0 || val <= this.minStack[len(this.minStack)-1] {
+	if min := this.minStack[len(this.minStack)-1]; val <= min {
 		this.minStack = append(this.minStack, val)
+	} else {
+		this.minStack = append(this.minStack, min)
 	}
 }
 
 func (this *MinStack) Pop() {
-	val := this.data[len(this.data)-1]
 	this.data = this.data[:len(this.data)-1]
-	if min := this.minStack[len(this.minStack)-1]; val == min {
-		this.minStack = this.minStack[:len(this.minStack)-1]
-	}
+	this.minStack = this.minStack[:len(this.minStack)-1]
 }
 
 func (this *MinStack) Top() int {
