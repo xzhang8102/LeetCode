@@ -1,5 +1,10 @@
 package golang
 
+import (
+	"math"
+	"strconv"
+)
+
 /*
  * @lc app=leetcode.cn id=440 lang=golang
  *
@@ -7,44 +12,39 @@ package golang
  */
 
 // @lc code=start
-type lc440Trie struct {
-	val      int
-	children [10]*lc440Trie
-}
-
-// fill trie based on digit counts
-func (trie *lc440Trie) insert(limit int) {
-	for i := range trie.children {
-		childVal := trie.val*10 + i
-		if childVal > 0 && childVal <= limit {
-			trie.children[i] = &lc440Trie{val: childVal}
-			trie.children[i].insert(limit)
-		}
-	}
-}
-
 func findKthNumber(n int, k int) int {
-	trie := &lc440Trie{}
-	trie.insert(n)
-	ans := 0
-	var dfs func(node *lc440Trie)
-	dfs = func(node *lc440Trie) {
-		if ans != 0 {
-			return
-		}
-		if k == 0 {
-			ans = node.val
-			return
-		}
-		for _, child := range node.children {
-			if child != nil {
-				k--
-				dfs(child)
-			}
+	ans := 1
+	for k > 1 {
+		cnt := lc440PrifixCnt(ans, n)
+		if k > cnt {
+			// accept the whole sub-trie
+			ans++
+			k -= cnt
+		} else {
+			// into the sub-trie
+			ans *= 10
+			// take original ans as a valid number
+			k--
 		}
 	}
-	dfs(trie)
 	return ans
+}
+
+// count all valid number (smaller than limit) with prefix
+func lc440PrifixCnt(prefix, limit int) int {
+	prefixStr, limitStr := strconv.Itoa(prefix), strconv.Itoa(limit)
+	prefixLen, limitLen := len(prefixStr), len(limitStr)
+	cnt := 0
+	// add all the number has smaller value than limit
+	for i := 0; i < limitLen-prefixLen; i++ {
+		cnt += int(math.Pow10(i))
+	}
+	if x, _ := strconv.Atoi(limitStr[:prefixLen]); x > prefix {
+		cnt += int(math.Pow10(limitLen - prefixLen))
+	} else if x == prefix {
+		cnt += limit - x*int(math.Pow10(limitLen-prefixLen)) + 1
+	}
+	return cnt
 }
 
 // @lc code=end
