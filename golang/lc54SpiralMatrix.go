@@ -15,33 +15,20 @@ func spiralOrder(matrix [][]int) []int {
 	col := len(matrix[0])
 	ans := make([]int, 0, row*col)
 	for left, right, up, down := 0, col, 0, row; left < right && up < down; {
-		start := struct{ r, c int }{up, left}
-		for ; start.c < right; start.c++ {
-			ans = append(ans, matrix[up][start.c])
+		for i := left; i < right; i++ {
+			ans = append(ans, matrix[up][i])
 		}
-		start.c--
-		start.r++
-		if start.r >= down {
-			break
+		for i := up + 1; i < down; i++ {
+			ans = append(ans, matrix[i][right-1])
 		}
-		for ; start.r < down; start.r++ {
-			ans = append(ans, matrix[start.r][right-1])
-		}
-		start.r--
-		start.c--
-		if start.c < left {
-			break
-		}
-		for ; start.c >= left; start.c-- {
-			ans = append(ans, matrix[down-1][start.c])
-		}
-		start.c++
-		start.r--
-		if start.r <= up {
-			break
-		}
-		for ; start.r > up; start.r-- {
-			ans = append(ans, matrix[start.r][left])
+		// make sure there is enough space for further traversal with no repeat
+		if right-left > 1 && down-up > 1 {
+			for i := right - 2; i >= left; i-- {
+				ans = append(ans, matrix[down-1][i])
+			}
+			for i := down - 2; i > up; i-- {
+				ans = append(ans, matrix[i][left])
+			}
 		}
 		left++
 		right--
