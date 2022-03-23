@@ -15,16 +15,20 @@ package golang
  * }
  */
 func getIntersectionNode(headA, headB *ListNode) *ListNode {
-	visited := map[*ListNode]bool{}
-	for ptr := headA; ptr != nil; ptr = ptr.Next {
-		visited[ptr] = true
-	}
-	for ptr := headB; ptr != nil; ptr = ptr.Next {
-		if visited[ptr] {
-			return ptr
+	ptrA, ptrB := headA, headB
+	for ptrA != ptrB {
+		if ptrA == nil {
+			ptrA = headB
+		} else {
+			ptrA = ptrA.Next
+		}
+		if ptrB == nil {
+			ptrB = headA
+		} else {
+			ptrB = ptrB.Next
 		}
 	}
-	return nil
+	return ptrA
 }
 
 // @lc code=end
