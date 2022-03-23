@@ -10,17 +10,12 @@ package golang
 func convertToTitle(columnNumber int) string {
 	ans := []byte{}
 	for columnNumber > 0 {
-		char := columnNumber % 26
+		columnNumber--
+		ans = append(ans, byte('A'+columnNumber%26))
 		columnNumber /= 26
-		if char == 0 {
-			ans = append(ans, 'Z')
-			columnNumber--
-		} else {
-			ans = append(ans, byte('A'+char-1))
-		}
 	}
-	for i, j := 0, len(ans)-1; i < j; i, j = i+1, j-1 {
-		ans[i], ans[j] = ans[j], ans[i]
+	for i, n := 0, len(ans); i < n/2; i++ {
+		ans[i], ans[n-i-1] = ans[n-i-1], ans[i]
 	}
 	return string(ans)
 }
