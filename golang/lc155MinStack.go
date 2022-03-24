@@ -12,7 +12,7 @@ type MinStack struct {
 	min   int
 }
 
-func Constructor() MinStack {
+func lc155Constructor() MinStack {
 	return MinStack{
 		[]int{},
 		0,
