@@ -9,11 +9,13 @@ package golang
 // @lc code=start
 func minCostClimbingStairs(cost []int) int {
 	n := len(cost)
-	dp := make([]int, n+1)
+	curr, prev := 0, 0
 	for i := 2; i <= n; i++ {
-		dp[i] = lc746Min(dp[i-1]+cost[i-1], dp[i-2]+cost[i-2])
+		tmp := curr
+		curr = lc746Min(curr+cost[i-1], prev+cost[i-2])
+		prev = tmp
 	}
-	return dp[n]
+	return curr
 }
 
 func lc746Min(a, b int) int {
