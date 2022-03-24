@@ -8,24 +8,22 @@ package golang
 
 // @lc code=start
 type TwoSum struct {
-	data []int
+	dict map[int]int
 }
 
 func Constructor() TwoSum {
-	return TwoSum{[]int{}}
+	return TwoSum{map[int]int{}}
 }
 
 func (this *TwoSum) Add(number int) {
-	this.data = append(this.data, number)
+	this.dict[number]++
 }
 
 func (this *TwoSum) Find(value int) bool {
-	cache := map[int]bool{}
-	for _, v := range this.data {
-		if _, ok := cache[value-v]; ok {
+	for v := range this.dict {
+		target := value - v
+		if target == v && this.dict[v] > 1 || target != v && this.dict[target] >= 1 {
 			return true
-		} else {
-			cache[v] = true
 		}
 	}
 	return false
