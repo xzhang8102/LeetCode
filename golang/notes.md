@@ -10,3 +10,8 @@ Example: [lc84](../golang/lc84LargestRectangleInHistogram.go)
 The iterative solution mimics the call stack of the recursive one.  
 The key is `stack := []interface{}{}` which saves memory from declaring a `map` of visited nodes.  
 Example: [lc606](../golang/lc606ConstructStringFromBinaryTree.go)
+
+## Tricks
+
+1. Find the lowest bit of the given number.  
+`i & -i`
