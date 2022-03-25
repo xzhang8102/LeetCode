@@ -1,5 +1,7 @@
 package golang
 
+import "fmt"
+
 /*
  * @lc app=leetcode.cn id=818 lang=golang
  *
@@ -8,45 +10,36 @@ package golang
 
 // @lc code=start
 func racecar(target int) int {
-	type record struct {
-		speed, location int
-		op              byte
-	}
-	ans := -1
-	if target == 0 {
-		return 0
-	}
-	q := []record{{1, 0, 'A'}, {1, 0, 'R'}}
+	q := [][2]int{{0, 1}}
+	visited := map[string]bool{"0_1": true}
+	ans := 0
 	for len(q) > 0 {
 		tmp := q
-		q = []record{}
-		ans++
-		for _, r := range tmp {
-			if r.location == target {
+		q = [][2]int{}
+		for _, curr := range tmp {
+			if curr[0] == target {
 				return ans
 			}
-			if r.op == 'A' {
-				q = append(q, record{r.speed * 2, r.location + r.speed, 'A'})
-				q = append(q, record{r.speed * 2, r.location + r.speed, 'R'})
-			} else {
-				if r.speed > 0 {
-					q = append(q, record{-1, r.location, 'A'})
-					q = append(q, record{-1, r.location, 'R'})
-				} else {
-					q = append(q, record{1, r.location, 'A'})
-					q = append(q, record{1, r.location, 'R'})
-				}
+			nxt := [2]int{curr[0] + curr[1], curr[1] << 1}
+			key := fmt.Sprintf("%d_%d", nxt[0], nxt[1])
+			if !visited[key] && nxt[0] > 0 && nxt[0] < target<<1 {
+				q = append(q, nxt)
+				visited[key] = true
+			}
+			nxt[0] = curr[0]
+			nxt[1] = -1
+			if curr[1] < 0 {
+				nxt[1] = 1
+			}
+			key = fmt.Sprintf("%d_%d", nxt[0], nxt[1])
+			if !visited[key] && nxt[0] > 0 && nxt[0] < target<<1 {
+				q = append(q, nxt)
+				visited[key] = true
 			}
 		}
+		ans++
 	}
-	return ans
-}
-
-func lc818Abs(a int) int {
-	if a < 0 {
-		return -a
-	}
-	return a
+	return -1
 }
 
 // @lc code=end
