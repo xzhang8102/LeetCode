@@ -8,13 +8,10 @@ package golang
 
 // @lc code=start
 func trailingZeroes(n int) int {
-	ans := 0
-	for i := 5; i <= n; i += 5 {
-		for j := i; j%5 == 0; j /= 5 {
-			ans++
-		}
+	if n < 5 {
+		return 0
 	}
-	return ans
+	return n/5 + trailingZeroes(n/5)
 }
 
 // @lc code=end
