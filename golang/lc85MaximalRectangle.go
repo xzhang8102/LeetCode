@@ -17,30 +17,25 @@ func maximalRectangle(matrix [][]byte) int {
 	height := make([]int, col)
 	for r := 0; r < row; r++ {
 		stack := []int{}
-		left, right := make([]int, col), make([]int, col)
-		for c := 0; c < col; c++ {
-			if matrix[r][c] == '1' {
-				height[c] += 1
-			} else {
-				height[c] = 0
+		area := 0
+		for c := 0; c <= col; c++ {
+			if c < col {
+				if matrix[r][c] == '1' {
+					height[c] += 1
+				} else {
+					height[c] = 0
+				}
 			}
-			for len(stack) > 0 && height[stack[len(stack)-1]] >= height[c] {
-				right[stack[len(stack)-1]] = c
+			for len(stack) > 0 && (c == col || height[stack[len(stack)-1]] >= height[c]) {
+				right := c
+				left := -1
+				if len(stack) > 1 {
+					left = stack[len(stack)-2]
+				}
+				area = lc85Max(area, (right-left-1)*height[stack[len(stack)-1]])
 				stack = stack[:len(stack)-1]
 			}
-			if len(stack) == 0 {
-				left[c] = -1
-			} else {
-				left[c] = stack[len(stack)-1]
-			}
 			stack = append(stack, c)
-		}
-		for _, idx := range stack {
-			right[idx] = col
-		}
-		area := 0
-		for i := 0; i < col; i++ {
-			area = lc85Max(area, (right[i]-left[i]-1)*height[i])
 		}
 		ans = lc85Max(ans, area)
 	}
