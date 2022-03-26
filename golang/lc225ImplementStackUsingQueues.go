@@ -8,38 +8,35 @@ package golang
 
 // @lc code=start
 type MyStack struct {
-	in  []int
-	out []int
+	queue []int
 }
 
 func Constructor() MyStack {
-	return MyStack{[]int{}, []int{}}
+	return MyStack{[]int{}}
 }
 
 func (this *MyStack) Push(x int) {
-	for _, v := range this.in {
-		this.out = append(this.out, v)
+	n := len(this.queue)
+	this.queue = append(this.queue, x)
+	for n > 0 {
+		this.queue = append(this.queue, this.queue[0])
+		this.queue = this.queue[1:]
+		n--
 	}
-	this.in = []int{x}
 }
 
 func (this *MyStack) Pop() int {
 	top := this.Top()
-	this.in = []int{}
-	for len(this.out) > 1 {
-		this.in = append(this.in, this.out[0])
-		this.out = this.out[1:]
-	}
-	this.in, this.out = this.out, this.in
+	this.queue = this.queue[1:]
 	return top
 }
 
 func (this *MyStack) Top() int {
-	return this.in[0]
+	return this.queue[0]
 }
 
 func (this *MyStack) Empty() bool {
-	return len(this.in) == 0 && len(this.out) == 0
+	return len(this.queue) == 0
 }
 
 /**
