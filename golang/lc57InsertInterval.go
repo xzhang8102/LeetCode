@@ -9,41 +9,24 @@ package golang
 // @lc code=start
 func insert(intervals [][]int, newInterval []int) [][]int {
 	ans := [][]int{}
-	n := len(intervals)
-	if n == 0 || newInterval[1] < intervals[0][0] {
-		ans = append(ans, newInterval)
-		ans = append(ans, intervals...)
-		return ans
-	}
-	left, right := 0, 0
-	for right < n {
-		if intervals[left][1] < newInterval[0] {
-			ans = append(ans, intervals[left])
-			left++
-			right++
-		} else {
-			if left == right || newInterval[1] >= intervals[right][0] || newInterval[1] >= intervals[right][1] {
-				right++
-			} else {
-				break
+	left, right := newInterval[0], newInterval[1]
+	merged := false
+	for _, interval := range intervals {
+		if interval[0] > right {
+			if !merged {
+				ans = append(ans, []int{left, right})
+				merged = true
 			}
+			ans = append(ans, interval)
+		} else if left > interval[1] {
+			ans = append(ans, interval)
+		} else {
+			left = lc57Min(left, interval[0])
+			right = lc57Max(right, interval[1])
 		}
 	}
-	lo := newInterval[0]
-	if left < n {
-		lo = lc57Min(newInterval[0], intervals[left][0])
-	}
-	hi := newInterval[1]
-	merged := false
-	if newInterval[1] >= intervals[right-1][0] {
-		merged = true
-		hi = lc57Max(newInterval[1], intervals[right-1][1])
-	}
-	ans = append(ans, []int{lo, hi})
-	if merged {
-		ans = append(ans, intervals[right:]...)
-	} else {
-		ans = append(ans, intervals[right-1:]...)
+	if !merged {
+		ans = append(ans, []int{left, right})
 	}
 	return ans
 }
