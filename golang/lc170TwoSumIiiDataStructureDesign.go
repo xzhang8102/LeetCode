@@ -11,7 +11,7 @@ type TwoSum struct {
 	dict map[int]int
 }
 
-func Constructor() TwoSum {
+func lc170Constructor() TwoSum {
 	return TwoSum{map[int]int{}}
 }
 
