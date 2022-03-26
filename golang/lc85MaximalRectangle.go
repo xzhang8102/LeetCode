@@ -8,37 +8,41 @@ package golang
 
 // @lc code=start
 func maximalRectangle(matrix [][]byte) int {
-	y := len(matrix)
-	if y == 0 {
+	row := len(matrix)
+	if row == 0 {
 		return 0
 	}
-	x := len(matrix[0])
-	left := make([][]int, y) // 记录每个点向左最多连续的1的个数
-	for i, row := range matrix {
-		left[i] = make([]int, x)
-		for j, v := range row {
-			if v == '1' {
-				if j == 0 {
-					left[i][j] = 1
-				} else {
-					left[i][j] = left[i][j-1] + 1
-				}
-			}
-		}
-	}
 	ans := 0
-	for r := 0; r < y; r++ {
-		for c := 0; c < x; c++ {
+	col := len(matrix[0])
+	height := make([]int, col)
+	for r := 0; r < row; r++ {
+		stack := []int{}
+		left, right := make([]int, col), make([]int, col)
+		for c := 0; c < col; c++ {
 			if matrix[r][c] == '1' {
-				area := left[r][c]
-				width := left[r][c]
-				for i := r - 1; i >= 0 && left[i][c] > 0; i-- {
-					width = lc85Min(width, left[i][c])
-					area = lc85Max(area, (r-i+1)*width)
-				}
-				ans = lc85Max(ans, area)
+				height[c] += 1
+			} else {
+				height[c] = 0
 			}
+			for len(stack) > 0 && height[stack[len(stack)-1]] >= height[c] {
+				right[stack[len(stack)-1]] = c
+				stack = stack[:len(stack)-1]
+			}
+			if len(stack) == 0 {
+				left[c] = -1
+			} else {
+				left[c] = stack[len(stack)-1]
+			}
+			stack = append(stack, c)
 		}
+		for _, idx := range stack {
+			right[idx] = col
+		}
+		area := 0
+		for i := 0; i < col; i++ {
+			area = lc85Max(area, (right[i]-left[i]-1)*height[i])
+		}
+		ans = lc85Max(ans, area)
 	}
 	return ans
 }
