@@ -16,19 +16,15 @@ func Constructor() MyQueue {
 }
 
 func (this *MyQueue) Push(x int) {
-	for size := len(this.second); size > 0; size-- {
-		top := this.second[size-1]
-		this.main = append(this.main, top)
-		this.second = this.second[:size-1]
-	}
 	this.main = append(this.main, x)
 }
 
 func (this *MyQueue) Pop() int {
-	for size := len(this.main); size > 0; size-- {
-		top := this.main[size-1]
-		this.second = append(this.second, top)
-		this.main = this.main[:size-1]
+	if len(this.second) == 0 {
+		for size := len(this.main); size > 0; size-- {
+			this.second = append(this.second, this.main[size-1])
+			this.main = this.main[:size-1]
+		}
 	}
 	size := len(this.second)
 	top := this.second[size-1]
@@ -37,10 +33,11 @@ func (this *MyQueue) Pop() int {
 }
 
 func (this *MyQueue) Peek() int {
-	for size := len(this.main); size > 0; size-- {
-		top := this.main[size-1]
-		this.second = append(this.second, top)
-		this.main = this.main[:size-1]
+	if len(this.second) == 0 {
+		for size := len(this.main); size > 0; size-- {
+			this.second = append(this.second, this.main[size-1])
+			this.main = this.main[:size-1]
+		}
 	}
 	size := len(this.second)
 	top := this.second[size-1]
