@@ -11,7 +11,7 @@ type MyStack struct {
 	queue []int
 }
 
-func Constructor() MyStack {
+func lc225Constructor() MyStack {
 	return MyStack{[]int{}}
 }
 
