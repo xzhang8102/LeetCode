@@ -8,27 +8,31 @@ package golang
 
 // @lc code=start
 func setZeroes(matrix [][]int) {
-	row := len(matrix)
-	if row == 0 {
+	m := len(matrix)
+	if m == 0 {
 		return
 	}
-	col := len(matrix[0])
-	coord := map[int]bool{}
-	for r := 0; r < row; r++ {
-		clear := false
-		for c := 0; c < col; c++ {
-			if matrix[r][c] == 0 {
-				clear = true
-				coord[c] = true
+	n := len(matrix[0])
+	col0 := false
+	for _, row := range matrix {
+		if row[0] == 0 {
+			col0 = true
+		}
+		for i := 1; i < n; i++ {
+			if row[i] == 0 {
+				matrix[0][i] = 0
+				row[0] = 0
 			}
 		}
-		if clear {
-			copy(matrix[r], make([]int, col))
-		}
 	}
-	for c := range coord {
-		for r := 0; r < row; r++ {
-			matrix[r][c] = 0
+	for i := m - 1; i >= 0; i-- {
+		for j := 1; j < n; j++ {
+			if matrix[0][j] == 0 || matrix[i][0] == 0 {
+				matrix[i][j] = 0
+			}
+		}
+		if col0 {
+			matrix[i][0] = 0
 		}
 	}
 }
