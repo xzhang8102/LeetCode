@@ -8,33 +8,20 @@ package golang
 
 // @lc code=start
 func missingRolls(rolls []int, mean int, n int) []int {
-	offset := 0
-	for _, roll := range rolls {
-		offset += roll - mean
+	missing := mean * (n + len(rolls))
+	for _, v := range rolls {
+		missing -= v
 	}
-	if offset < 0 && (mean-6)*n > offset || offset > 0 && (mean-1)*n < offset {
+	if missing < n || missing > 6*n {
 		return nil
 	}
 	ans := make([]int, n)
+	quotient, remainder := missing/n, missing%n
 	for i := range ans {
-		if offset == 0 {
-			ans[i] = mean
-		} else if offset > 0 {
-			if offset <= mean-1 {
-				ans[i] = mean - offset
-				offset = 0
-			} else {
-				ans[i] = 1
-				offset -= mean - 1
-			}
-		} else {
-			if offset >= mean-6 {
-				ans[i] = mean - offset
-				offset = 0
-			} else {
-				ans[i] = 6
-				offset += 6 - mean
-			}
+		ans[i] = quotient
+		if remainder > 0 {
+			ans[i]++
+			remainder--
 		}
 	}
 	return ans
