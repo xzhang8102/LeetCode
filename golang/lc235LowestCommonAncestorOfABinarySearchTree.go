@@ -17,26 +17,16 @@ package golang
  */
 
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
-	p1, p2 := lc235FindPath(root, p), lc235FindPath(root, q)
-	for i := 0; i <= len(p1) && i <= len(p2); i++ {
-		if i == len(p1) || i == len(p2) || p1[i] != p2[i] {
-			return p1[i-1]
-		}
+	if root == nil {
+		return nil
 	}
-	return nil
-}
-
-func lc235FindPath(root, node *TreeNode) []*TreeNode {
-	ret := []*TreeNode{root}
-	for ptr := root; ptr != node; {
-		if node.Val <= ptr.Val {
-			ptr = ptr.Left
-		} else {
-			ptr = ptr.Right
-		}
-		ret = append(ret, ptr)
+	if root.Val > p.Val && root.Val > q.Val {
+		return lowestCommonAncestor(root.Left, p, q)
 	}
-	return ret
+	if root.Val < p.Val && root.Val < q.Val {
+		return lowestCommonAncestor(root.Right, p, q)
+	}
+	return root
 }
 
 // @lc code=end
