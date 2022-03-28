@@ -9,28 +9,18 @@ package golang
 // @lc code=start
 func removeDuplicates(nums []int) int {
 	n := len(nums)
-	left := 0
-	cnt := 0
-	for right := 0; right <= n; {
-		if left == right || right < n && nums[right] == nums[left] {
-			cnt++
-			right++
-		} else {
-			nums[left] = nums[right-1]
-			if cnt > 1 {
-				left++
-				nums[left] = nums[right-1]
-			}
-			left++
-			if right < n {
-				nums[left] = nums[right]
-			} else {
-				break
-			}
-			cnt = 0
-		}
+	if n <= 2 {
+		return n
 	}
-	return left
+	slow, fast := 2, 2
+	for fast < n {
+		if nums[fast] != nums[slow-2] {
+			nums[slow] = nums[fast]
+			slow++
+		}
+		fast++
+	}
+	return slow
 }
 
 // @lc code=end
