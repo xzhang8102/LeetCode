@@ -9,7 +9,7 @@ import "strings"
  */
 
 // @lc code=start
-func isPalindrome(s string) bool {
+func lc125isPalindrome(s string) bool {
 	s = strings.ToLower(s)
 	left, right := 0, len(s)-1
 	for left < right {
