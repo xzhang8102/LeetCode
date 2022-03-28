@@ -15,19 +15,21 @@ package golang
  * }
  */
 func isPalindrome(head *ListNode) bool {
-	if head == nil || head.Next == nil {
-		return true
-	}
-	arr := []int{}
-	for ptr := head; ptr != nil; ptr = ptr.Next {
-		arr = append(arr, ptr.Val)
-	}
-	for i := 0; i < len(arr)/2; i++ {
-		if arr[i] != arr[len(arr)-1-i] {
-			return false
+	ptr := head
+	ans := true
+	var check func(node *ListNode)
+	check = func(node *ListNode) {
+		if node != nil {
+			check(node.Next)
+			if ptr.Val != node.Val {
+				ans = false
+			} else {
+				ptr = ptr.Next
+			}
 		}
 	}
-	return true
+	check(head)
+	return ans
 }
 
 // @lc code=end
