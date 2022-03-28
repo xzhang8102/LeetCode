@@ -17,16 +17,16 @@ package golang
  */
 
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
-	if root == nil {
-		return nil
+	ptr := root
+	for {
+		if ptr.Val > p.Val && ptr.Val > q.Val {
+			ptr = ptr.Left
+		} else if ptr.Val < p.Val && ptr.Val < q.Val {
+			ptr = ptr.Right
+		} else {
+			return ptr
+		}
 	}
-	if root.Val > p.Val && root.Val > q.Val {
-		return lowestCommonAncestor(root.Left, p, q)
-	}
-	if root.Val < p.Val && root.Val < q.Val {
-		return lowestCommonAncestor(root.Right, p, q)
-	}
-	return root
 }
 
 // @lc code=end
