@@ -11,19 +11,50 @@ func isScramble(s1 string, s2 string) bool {
 	if s1 == s2 {
 		return true
 	}
-	if !lc87Check(s1, s2) {
+	if len(s1) != len(s2) {
 		return false
 	}
+	const (
+		N       = -1
+		Y       = 1
+		PENDING = 0
+	)
 	n := len(s1)
-	for i := 1; i < n; i++ {
-		if isScramble(s1[:i], s2[:i]) && isScramble(s1[i:], s2[i:]) {
-			return true
-		}
-		if isScramble(s1[:i], s2[n-i:]) && isScramble(s1[i:], s2[:n-i]) {
-			return true
+	cache := make([][][]int, n)
+	for i := range cache {
+		cache[i] = make([][]int, n)
+		for j := range cache[i] {
+			cache[i][j] = make([]int, n+1)
 		}
 	}
-	return false
+	var dfs func(i, j, length int) bool
+	dfs = func(i, j, length int) bool {
+		if cache[i][j][length] != PENDING {
+			return cache[i][j][length] == Y
+		}
+		sub1, sub2 := s1[i:i+length], s2[j:j+length]
+		if sub1 == sub2 {
+			cache[i][j][length] = Y
+			return true
+		}
+		if !lc87Check(sub1, sub2) {
+			cache[i][j][length] = N
+			return false
+		}
+		for k := 1; k < length; k++ {
+			if dfs(i, j, k) && dfs(i+k, j+k, length-k) {
+				cache[i][j][length] = Y
+				return true
+			}
+			if dfs(i, length-k+j, k) && dfs(i+k, j, length-k) {
+				cache[i][j][length] = Y
+				return true
+			}
+		}
+		cache[i][j][length] = N
+		return false
+	}
+	return dfs(0, 0, n)
 }
 
 func lc87Check(s1, s2 string) bool {
