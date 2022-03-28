@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func removeDuplicates(nums []int) int {
+func lc26removeDuplicates(nums []int) int {
 	n := len(nums)
 	slow, fast := 0, 1
 	for fast < n {
