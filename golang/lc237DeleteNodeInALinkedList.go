@@ -15,15 +15,10 @@ package golang
  * }
  */
 func deleteNode(node *ListNode) {
-	curr, next := node, node.Next
-	for next != nil {
-		curr.Val = next.Val
-		if next.Next == nil {
-			curr.Next = nil
-		}
-		curr = next
-		next = next.Next
-	}
+	ptr := node.Next
+	node.Val = ptr.Val
+	node.Next = ptr.Next
+	ptr.Next = nil
 }
 
 // @lc code=end
