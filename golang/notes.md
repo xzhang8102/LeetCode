@@ -18,3 +18,5 @@ Example: [lc606](../golang/lc606ConstructStringFromBinaryTree.go)
 
 2. Calculate the middle element's index during a binary search.  
 `mid := lo + (hi - lo) >> 1`
+
+3. When dealing with linked list, there is a great chance that you need a dummy node.
