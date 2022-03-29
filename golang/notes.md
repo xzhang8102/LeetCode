@@ -15,3 +15,6 @@ Example: [lc606](../golang/lc606ConstructStringFromBinaryTree.go)
 
 1. Find the lowest bit of the given number.  
 `i & -i`
+
+2. Calculate the middle element's index during a binary search.  
+`mid := lo + (hi - lo) >> 1`

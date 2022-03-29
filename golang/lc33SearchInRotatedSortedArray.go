@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func search(nums []int, target int) int {
+func lc33search(nums []int, target int) int {
 	n := len(nums)
 	ans := -1
 	for lo, hi := 0, n-1; lo <= hi; {
