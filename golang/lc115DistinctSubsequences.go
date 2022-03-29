@@ -8,22 +8,26 @@ package golang
 
 // @lc code=start
 func numDistinct(s string, t string) int {
-	n := len(t)
-	ans := 0
-	var backtrack func(si, ti int)
-	backtrack = func(si, ti int) {
-		if ti == n {
-			ans++
-			return
-		}
-		for i := si; i < len(s); i++ {
-			if s[i] == t[ti] {
-				backtrack(i+1, ti+1)
+	n, m := len(s), len(t)
+	dp := make([][]int, m+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+		if i == 0 {
+			for j := range dp[i] {
+				dp[i][j] = 1
 			}
 		}
 	}
-	backtrack(0, 0)
-	return ans
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			if s[j-1] == t[i-1] {
+				dp[i][j] = dp[i][j-1] + dp[i-1][j-1]
+			} else {
+				dp[i][j] = dp[i][j-1]
+			}
+		}
+	}
+	return dp[m][n]
 }
 
 // @lc code=end
