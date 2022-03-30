@@ -9,17 +9,17 @@ import "container/heap"
  */
 
 // @lc code=start
-type pair struct{ price, timestamp int }
-type hp []pair
+type lc2034Tuple struct{ price, timestamp int }
+type lc2034Heap []lc2034Tuple
 
-func (h hp) Len() int            { return len(h) }
-func (h hp) Less(i, j int) bool  { return h[i].price < h[j].price }
-func (h hp) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
-func (h *hp) Push(v interface{}) { *h = append(*h, v.(pair)) }
-func (h *hp) Pop() interface{}   { a := *h; v := a[len(a)-1]; *h = a[:len(a)-1]; return v }
+func (h lc2034Heap) Len() int            { return len(h) }
+func (h lc2034Heap) Less(i, j int) bool  { return h[i].price < h[j].price }
+func (h lc2034Heap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *lc2034Heap) Push(v interface{}) { *h = append(*h, v.(lc2034Tuple)) }
+func (h *lc2034Heap) Pop() interface{}   { a := *h; v := a[len(a)-1]; *h = a[:len(a)-1]; return v }
 
 type StockPrice struct {
-	maxPrice, minPrice hp
+	maxPrice, minPrice lc2034Heap
 	timePriceMap       map[int]int
 	latest             int
 }
@@ -29,8 +29,8 @@ func lc2034Constructor() StockPrice {
 }
 
 func (this *StockPrice) Update(timestamp int, price int) {
-	heap.Push(&this.maxPrice, pair{-price, timestamp})
-	heap.Push(&this.minPrice, pair{price, timestamp})
+	heap.Push(&this.maxPrice, lc2034Tuple{-price, timestamp})
+	heap.Push(&this.minPrice, lc2034Tuple{price, timestamp})
 	this.timePriceMap[timestamp] = price
 	if timestamp > this.latest {
 		this.latest = timestamp
