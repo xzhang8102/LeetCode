@@ -15,43 +15,38 @@ import (
 func restoreIpAddresses(s string) []string {
 	n := len(s)
 	ans := []string{}
-	pick := make([]int, 0, 4)
-	var backtrack func(start int)
-	backtrack = func(start int) {
-		if len(pick) == 4 && start == n {
-			tmp := make([]string, 4)
-			for i, idx := range pick {
-				if i == 0 {
-					tmp[i] = s[:idx]
-				} else {
-					tmp[i] = s[pick[i-1]:idx]
+	pick := make([]int, 4, 4)
+	var backtrack func(start, id int)
+	backtrack = func(start, id int) {
+		if id == 4 {
+			if start == n {
+				tmp := make([]string, 4)
+				for i, v := range pick {
+					tmp[i] = strconv.Itoa(v)
 				}
+				ans = append(ans, strings.Join(tmp, "."))
 			}
-			ans = append(ans, strings.Join(tmp, "."))
-		} else if len(pick) < 4 && n-start >= 4-len(pick) && n-start <= 3*(4-len(pick)) {
-			for k := start; k < start+3 && k < n; k++ {
-				switch k - start {
-				case 0:
-					pick = append(pick, k+1)
-					backtrack(k + 1)
-					pick = pick[:len(pick)-1]
-				case 1:
-					if s[k-1] != '0' {
-						pick = append(pick, k+1)
-						backtrack(k + 1)
-						pick = pick[:len(pick)-1]
-					}
-				case 2:
-					if val, _ := strconv.Atoi(s[start : k+1]); s[k-2] != '0' && val <= 255 {
-						pick = append(pick, k+1)
-						backtrack(k + 1)
-						pick = pick[:len(pick)-1]
-					}
-				}
+			return
+		}
+		if start == n {
+			return
+		}
+		if s[start] == '0' {
+			pick[id] = 0
+			backtrack(start+1, id+1)
+		}
+		addr := 0
+		for i := start; i < n && i < start+3; i++ {
+			addr = addr*10 + int(s[i]-'0')
+			if addr > 0 && addr <= 0xFF {
+				pick[id] = addr
+				backtrack(i+1, id+1)
+			} else {
+				break
 			}
 		}
 	}
-	backtrack(0)
+	backtrack(0, 0)
 	return ans
 }
 
