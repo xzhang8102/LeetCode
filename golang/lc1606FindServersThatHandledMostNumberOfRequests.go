@@ -1,5 +1,11 @@
 package golang
 
+import (
+	"container/heap"
+
+	"github.com/emirpasic/gods/trees/redblacktree"
+)
+
 /*
  * @lc app=leetcode.cn id=1606 lang=golang
  *
@@ -7,42 +13,47 @@ package golang
  */
 
 // @lc code=start
-func busiestServers(k int, arrival []int, load []int) []int {
-	type tuple struct{ time, tasks int }
-	status := map[int]*tuple{} // time(busy util) - task count
-	max := 0
-	ans := []int{}
-	for i, time := range arrival {
-		n := i % k
-		cnt := 0
-		drop := false
-		for t, ok := status[n]; ok && t.time > time; t, ok = status[n] {
-			n++
-			if n == k {
-				n = 0
-			}
-			cnt++
-			if cnt == k {
-				drop = true
-				break
-			}
+func busiestServers(k int, arrival, load []int) (ans []int) {
+	available := redblacktree.NewWithIntComparator()
+	for i := 0; i < k; i++ {
+		available.Put(i, nil)
+	}
+	busy := lc1606Heap{}
+	requests := make([]int, k)
+	maxRequest := 0
+	for i, t := range arrival {
+		for len(busy) > 0 && busy[0].end <= t {
+			available.Put(busy[0].id, nil)
+			heap.Pop(&busy)
 		}
-		if drop {
+		if available.Size() == 0 {
 			continue
 		}
-		if status[n] == nil {
-			status[n] = &tuple{}
+		node, _ := available.Ceiling(i % k)
+		if node == nil {
+			node = available.Left()
 		}
-		status[n].time = time + load[i]
-		status[n].tasks++
-		if status[n].tasks == max {
-			ans = append(ans, n)
-		} else if status[n].tasks > max {
-			ans = []int{n}
-			max = status[n].tasks
+		id := node.Key.(int)
+		requests[id]++
+		if requests[id] > maxRequest {
+			maxRequest = requests[id]
+			ans = []int{id}
+		} else if requests[id] == maxRequest {
+			ans = append(ans, id)
 		}
+		heap.Push(&busy, lc1606Tuple{t + load[i], id})
+		available.Remove(id)
 	}
-	return ans
+	return
 }
+
+type lc1606Tuple struct{ end, id int }
+type lc1606Heap []lc1606Tuple
+
+func (h lc1606Heap) Len() int            { return len(h) }
+func (h lc1606Heap) Less(i, j int) bool  { return h[i].end < h[j].end }
+func (h lc1606Heap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *lc1606Heap) Push(v interface{}) { *h = append(*h, v.(lc1606Tuple)) }
+func (h *lc1606Heap) Pop() interface{}   { a := *h; v := a[len(a)-1]; *h = a[:len(a)-1]; return v }
 
 // @lc code=end
