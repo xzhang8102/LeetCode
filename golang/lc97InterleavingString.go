@@ -12,37 +12,30 @@ func isInterleave(s1 string, s2 string, s3 string) bool {
 	if n3 != n1+n2 {
 		return false
 	}
-	dp := make([][]int, n2+1)
+	dp := make([][]bool, n2+1)
 	for i := range dp {
-		dp[i] = make([]int, n1+1)
-	}
-	var dfs func(int, int, int)
-	dfs = func(p1, p2, p3 int) {
-		if p1 == len(s1) && p2 == len(s2) && p3 == len(s3) {
-			dp[p2][p1] = 1
-			return
-		}
-		if dp[p2][p1] != 0 {
-			return
-		}
-		if p1 < len(s1) && s1[p1] == s3[p3] {
-			dfs(p1+1, p2, p3+1)
-			if dp[p2][p1+1] == 1 {
-				dp[p2][p1] = 1
+		dp[i] = make([]bool, n1+1)
+		if i == 0 {
+			dp[0][0] = true
+			for j := 1; j <= n1; j++ {
+				dp[0][j] = s3[j-1] == s1[j-1] && dp[0][j-1]
 			}
-		}
-		if p2 < len(s2) && s2[p2] == s3[p3] {
-			dfs(p1, p2+1, p3+1)
-			if dp[p2+1][p1] == 1 {
-				dp[p2][p1] = 1
-			}
-		}
-		if dp[p2][p1] != 1 {
-			dp[p2][p1] = -1
+		} else {
+			dp[i][0] = s3[i-1] == s2[i-1] && dp[i-1][0]
 		}
 	}
-	dfs(0, 0, 0)
-	return dp[len(s2)][len(s1)] == 1
+	for p2 := 1; p2 <= n2; p2++ {
+		for p1 := 1; p1 <= n1; p1++ {
+			p3 := p2 + p1 - 1
+			if dp[p2][p1-1] {
+				dp[p2][p1] = s3[p3] == s1[p1-1]
+			}
+			if dp[p2-1][p1] {
+				dp[p2][p1] = dp[p2][p1] || s3[p3] == s2[p2-1]
+			}
+		}
+	}
+	return dp[len(s2)][len(s1)]
 }
 
 // @lc code=end
