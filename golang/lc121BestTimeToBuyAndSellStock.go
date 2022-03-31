@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func maxProfit(prices []int) int {
+func lc121maxProfit(prices []int) int {
 	ans := 0
 	n := len(prices)
 	for left, right := 0, 0; right < n; {
