@@ -22,24 +22,27 @@ func isValidBST(root *TreeNode) bool {
 		return true
 	}
 	pre := math.MinInt64
-	var inorder func(node *TreeNode) bool
-	inorder = func(node *TreeNode) bool {
-		if node == nil {
-			return true
+	stack := []interface{}{root}
+	for len(stack) > 0 {
+		ele := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		if node, ok := ele.(*TreeNode); ok {
+			if node.Right != nil {
+				stack = append(stack, node.Right)
+			}
+			stack = append(stack, node.Val)
+			if node.Left != nil {
+				stack = append(stack, node.Left)
+			}
+		} else {
+			if val, _ := ele.(int); val <= pre {
+				return false
+			} else {
+				pre = val
+			}
 		}
-		if !inorder(node.Left) {
-			return false
-		}
-		if node.Val <= pre {
-			return false
-		}
-		pre = node.Val
-		if !inorder(node.Right) {
-			return false
-		}
-		return true
 	}
-	return inorder(root)
+	return true
 }
 
 // @lc code=end
