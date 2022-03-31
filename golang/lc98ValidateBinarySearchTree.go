@@ -21,17 +21,25 @@ func isValidBST(root *TreeNode) bool {
 	if root == nil {
 		return true
 	}
-	return lc98dfs(root.Left, math.MinInt64, root.Val) && lc98dfs(root.Right, root.Val, math.MaxInt64)
-}
-
-func lc98dfs(node *TreeNode, lo, hi int) bool {
-	if node == nil {
+	pre := math.MinInt64
+	var inorder func(node *TreeNode) bool
+	inorder = func(node *TreeNode) bool {
+		if node == nil {
+			return true
+		}
+		if !inorder(node.Left) {
+			return false
+		}
+		if node.Val <= pre {
+			return false
+		}
+		pre = node.Val
+		if !inorder(node.Right) {
+			return false
+		}
 		return true
 	}
-	if node.Val <= lo || node.Val >= hi {
-		return false
-	}
-	return lc98dfs(node.Left, lo, node.Val) && lc98dfs(node.Right, node.Val, hi)
+	return inorder(root)
 }
 
 // @lc code=end
