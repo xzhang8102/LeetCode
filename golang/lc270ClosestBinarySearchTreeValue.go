@@ -20,22 +20,23 @@ import "math"
 func closestValue(root *TreeNode, target float64) int {
 	ans := 0
 	min := math.MaxFloat64
-	var dfs func(node *TreeNode)
-	dfs = func(node *TreeNode) {
-		if min == 0 || node == nil {
-			return
+	q := []*TreeNode{root}
+	for len(q) > 0 {
+		node := q[0]
+		q = q[1:]
+		if node == nil {
+			continue
 		}
 		if diff := lc270Abs(float64(node.Val) - target); diff < min {
 			min = diff
 			ans = node.Val
 		}
-		if target < float64(node.Val) {
-			dfs(node.Left)
+		if target > float64(node.Val) {
+			q = append(q, node.Right)
 		} else {
-			dfs(node.Right)
+			q = append(q, node.Left)
 		}
 	}
-	dfs(root)
 	return ans
 }
 
@@ -44,13 +45,6 @@ func lc270Abs(a float64) float64 {
 		return -a
 	}
 	return a
-}
-
-func lc270Max(a, b float64) float64 {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 // @lc code=end
