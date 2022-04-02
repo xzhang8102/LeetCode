@@ -1,5 +1,7 @@
 package golang
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=105 lang=golang
  *
@@ -16,24 +18,23 @@ package golang
  * }
  */
 func buildTree(preorder []int, inorder []int) *TreeNode {
-	mapping := map[int]int{}
-	for i, v := range inorder {
-		mapping[v] = i
-	}
-	var dfs func(start, end int) *TreeNode
-	dfs = func(start, end int) *TreeNode {
-		if start > end {
+	preIdx, inIdx := 0, 0
+	var dfs func(stop int) *TreeNode
+	dfs = func(stop int) *TreeNode {
+		if preIdx >= len(preorder) {
 			return nil
 		}
-		val := preorder[0]
-		preorder = preorder[1:]
-		node := &TreeNode{Val: val}
-		index := mapping[val]
-		node.Left = dfs(start, index-1)
-		node.Right = dfs(index+1, end)
+		if inorder[inIdx] == stop {
+			inIdx++
+			return nil
+		}
+		node := &TreeNode{Val: preorder[preIdx]}
+		preIdx++
+		node.Left = dfs(node.Val)
+		node.Right = dfs(stop)
 		return node
 	}
-	return dfs(0, len(inorder)-1)
+	return dfs(math.MaxInt32)
 }
 
 // @lc code=end
