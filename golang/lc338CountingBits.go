@@ -9,12 +9,12 @@ package golang
 // @lc code=start
 func countBits(n int) []int {
 	ans := make([]int, n+1)
-	for i := 0; i <= n; i++ {
-		ones := 0
-		for n := i; n > 0; n = n & (n - 1) {
-			ones++
+	highest := 0
+	for i := 1; i <= n; i++ {
+		if i&(i-1) == 0 {
+			highest = i
 		}
-		ans[i] = ones
+		ans[i] = ans[i-highest] + 1
 	}
 	return ans
 }
