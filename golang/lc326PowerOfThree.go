@@ -1,5 +1,7 @@
 package golang
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=326 lang=golang
  *
@@ -8,17 +10,7 @@ package golang
 
 // @lc code=start
 func isPowerOfThree(n int) bool {
-	if n == 1 {
-		return true
-	}
-	if n <= 0 {
-		return false
-	}
-	if n%3 == 0 {
-		return isPowerOfThree(n / 3)
-	} else {
-		return false
-	}
+	return n > 0 && int(math.Pow(3, 19))%n == 0
 }
 
 // @lc code=end
