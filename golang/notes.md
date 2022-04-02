@@ -20,3 +20,6 @@ Example: [lc606](../golang/lc606ConstructStringFromBinaryTree.go)
 `mid := lo + (hi - lo) >> 1`
 
 3. When dealing with linked list, there is a great chance that you need a dummy node.
+
+4. Convert the lowest 1 to 0.  
+`i & (i-1)`
