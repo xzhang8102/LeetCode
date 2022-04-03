@@ -8,20 +8,7 @@ package golang
 
 // @lc code=start
 func isPowerOfFour(n int) bool {
-	if n <= 0 {
-		return false
-	}
-	for n > 1 {
-		if n&1 == 1 {
-			return false
-		}
-		n >>= 1
-		if n&1 == 1 {
-			return false
-		}
-		n >>= 1
-	}
-	return true
+	return n > 0 && n&(n-1) == 0 && n&0xaaaaaaaa == 0
 }
 
 // @lc code=end
