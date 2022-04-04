@@ -7,25 +7,25 @@ package golang
  */
 
 // @lc code=start
-type NumArray struct {
+type lc303NumArray struct {
 	data []int
 	sum  []int
 }
 
-func lc303Constructor(nums []int) NumArray {
+func lc303Constructor(nums []int) lc303NumArray {
 	n := len(nums)
 	arr := make([]int, n)
 	arr[0] = nums[0]
 	for i := 1; i < n; i++ {
 		arr[i] = arr[i-1] + nums[i]
 	}
-	return NumArray{
+	return lc303NumArray{
 		nums,
 		arr,
 	}
 }
 
-func (this *NumArray) SumRange(left int, right int) int {
+func (this *lc303NumArray) SumRange(left int, right int) int {
 	if left == 0 {
 		return this.sum[right]
 	}

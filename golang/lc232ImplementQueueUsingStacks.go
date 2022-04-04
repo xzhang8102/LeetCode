@@ -11,7 +11,7 @@ type MyQueue struct {
 	main, second []int
 }
 
-func Constructor() MyQueue {
+func lc232Constructor() MyQueue {
 	return MyQueue{}
 }
 
