@@ -1,7 +1,5 @@
 package golang
 
-import "container/list"
-
 /*
  * @lc app=leetcode.cn id=346 lang=golang
  *
@@ -10,29 +8,34 @@ import "container/list"
 
 // @lc code=start
 type MovingAverage struct {
-	window, sum int
-	data        *list.List
+	head, sum int
+	data      []int
 }
 
 func Constructor(size int) MovingAverage {
 	return MovingAverage{
-		size,
 		0,
-		list.New(),
+		0,
+		make([]int, 0, size),
 	}
 }
 
 func (this *MovingAverage) Next(val int) float64 {
-	if this.data.Len() < this.window {
+	size := len(this.data)
+	if size < cap(this.data) {
 		this.sum += val
+		this.data = append(this.data, val)
 	} else {
-		front := this.data.Front()
-		diff := val - front.Value.(int)
-		this.data.Remove(front)
+		diff := val - this.data[this.head]
 		this.sum += diff
+		this.head++
+		if this.head == size {
+			this.head = 0
+		}
+		tail := (this.head + size - 1) % size
+		this.data[tail] = val
 	}
-	this.data.PushBack(val)
-	return float64(this.sum) / float64(this.data.Len())
+	return float64(this.sum) / float64(len(this.data))
 }
 
 /**
