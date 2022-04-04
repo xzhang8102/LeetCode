@@ -12,7 +12,7 @@ type NumArray struct {
 	presum []int
 }
 
-func Constructor(nums []int) NumArray {
+func lc307Constructor(nums []int) NumArray {
 	n := len(nums)
 	presum := make([]int, n)
 	presum[0] = nums[0]
