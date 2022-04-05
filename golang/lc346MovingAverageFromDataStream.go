@@ -12,7 +12,7 @@ type MovingAverage struct {
 	data      []int
 }
 
-func Constructor(size int) MovingAverage {
+func lc346Constructor(size int) MovingAverage {
 	return MovingAverage{
 		0,
 		0,
