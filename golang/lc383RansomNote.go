@@ -8,13 +8,16 @@ package golang
 
 // @lc code=start
 func canConstruct(ransomNote string, magazine string) bool {
-	dict := map[rune]int{}
+	if len(ransomNote) > len(magazine) {
+		return false
+	}
+	dict := [26]int{}
 	for _, ch := range magazine {
-		dict[ch]++
+		dict[ch-'a']++
 	}
 	for _, ch := range ransomNote {
-		if dict[ch] > 0 {
-			dict[ch]--
+		if dict[ch-'a'] > 0 {
+			dict[ch-'a']--
 		} else {
 			return false
 		}
