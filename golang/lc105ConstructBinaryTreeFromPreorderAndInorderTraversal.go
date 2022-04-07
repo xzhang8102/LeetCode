@@ -17,7 +17,7 @@ import "math"
  *     Right *TreeNode
  * }
  */
-func buildTree(preorder []int, inorder []int) *TreeNode {
+func lc105buildTree(preorder []int, inorder []int) *TreeNode {
 	preIdx, inIdx := 0, 0
 	var dfs func(stop int) *TreeNode
 	dfs = func(stop int) *TreeNode {
