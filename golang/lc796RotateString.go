@@ -1,5 +1,7 @@
 package golang
 
+import "strings"
+
 /*
  * @lc app=leetcode.cn id=796 lang=golang
  *
@@ -8,16 +10,7 @@ package golang
 
 // @lc code=start
 func rotateString(s string, goal string) bool {
-	if len(s) != len(goal) {
-		return false
-	}
-	n := len(s)
-	for shift := 0; shift < n; shift++ {
-		if goal == s[shift:]+s[:shift] {
-			return true
-		}
-	}
-	return false
+	return len(s) == len(goal) && strings.Contains(s+s, goal)
 }
 
 // @lc code=end
