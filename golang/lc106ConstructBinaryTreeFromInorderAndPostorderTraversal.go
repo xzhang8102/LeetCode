@@ -19,17 +19,26 @@ func buildTree(inorder []int, postorder []int) *TreeNode {
 	if len(postorder) == 0 {
 		return nil
 	}
-	rootVal := postorder[len(postorder)-1]
-	node := &TreeNode{Val: rootVal}
-	inIdx := 0
-	for i := 0; i < len(inorder); i++ {
-		if inorder[i] == rootVal {
-			inIdx = i
+	root := &TreeNode{Val: postorder[len(postorder)-1]}
+	stack := []*TreeNode{root}
+	inIdx := len(inorder) - 1
+	for i := len(postorder) - 2; i >= 0; i-- {
+		postVal := postorder[i]
+		node := stack[len(stack)-1]
+		if node.Val != inorder[inIdx] {
+			node.Right = &TreeNode{Val: postVal}
+			stack = append(stack, node.Right)
+		} else {
+			for len(stack) > 0 && stack[len(stack)-1].Val == inorder[inIdx] {
+				node = stack[len(stack)-1]
+				stack = stack[:len(stack)-1]
+				inIdx--
+			}
+			node.Left = &TreeNode{Val: postVal}
+			stack = append(stack, node.Left)
 		}
 	}
-	node.Left = buildTree(inorder[:inIdx], postorder[:inIdx])
-	node.Right = buildTree(inorder[inIdx+1:], postorder[inIdx:len(postorder)-1])
-	return node
+	return root
 }
 
 // @lc code=end
