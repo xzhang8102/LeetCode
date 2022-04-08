@@ -30,3 +30,31 @@ func Test_build(t *testing.T) {
 		})
 	}
 }
+
+func TestKMP(t *testing.T) {
+	type args struct {
+		str     string
+		pattern string
+	}
+	tests := []struct {
+		name string
+		args args
+		want []int
+	}{
+		{
+			name: "test KMP",
+			args: args{
+				str:     "ABC ABCDAB ABCDABCDABDE",
+				pattern: "ABCDABD",
+			},
+			want: []int{15},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := KMP(tt.args.str, tt.args.pattern); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("KMP() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
