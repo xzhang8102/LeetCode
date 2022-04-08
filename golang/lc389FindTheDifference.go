@@ -8,14 +8,14 @@ package golang
 
 // @lc code=start
 func findTheDifference(s string, t string) byte {
-	sum := 0
-	for _, ch := range t {
-		sum += int(ch)
-	}
+	ans := byte(0)
 	for _, ch := range s {
-		sum -= int(ch)
+		ans ^= byte(ch)
 	}
-	return byte(sum)
+	for _, ch := range t {
+		ans ^= byte(ch)
+	}
+	return ans
 }
 
 // @lc code=end
