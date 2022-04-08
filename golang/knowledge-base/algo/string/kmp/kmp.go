@@ -21,9 +21,7 @@ func build(pattern string) []int {
 		for i > 0 && pattern[i] != pattern[j] {
 			i = table[i-1]
 		}
-		if pattern[i] != pattern[j] {
-			table[j] = 0
-		} else {
+		if pattern[i] == pattern[j] {
 			table[j] = i + 1
 			i++
 		}
@@ -37,18 +35,14 @@ func KMP(str, pattern string) []int {
 	table := build(pattern)
 	n := len(str)
 	for i, j := 0, 0; i < n; i++ {
+		for j > 0 && str[i] != pattern[j] {
+			j = table[j-1]
+		}
 		if str[i] == pattern[j] {
 			j++
 			if j == len(pattern) {
 				ret = append(ret, i-len(pattern)+1)
 				j = table[j-1]
-			}
-		} else {
-			for j > 0 && str[i] != pattern[j] {
-				j = table[j-1]
-			}
-			if str[i] == pattern[j] {
-				j++
 			}
 		}
 	}
