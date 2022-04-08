@@ -15,7 +15,7 @@ package golang
  *     Right *TreeNode
  * }
  */
-func levelOrder(root *TreeNode) [][]int {
+func lc102levelOrder(root *TreeNode) [][]int {
 	ans := [][]int{}
 	level := 0
 	q := []*TreeNode{root}
