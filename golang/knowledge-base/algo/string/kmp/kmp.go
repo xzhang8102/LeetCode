@@ -32,6 +32,9 @@ func build(pattern string) []int {
 // return the indices of the substring matches the pattern
 func KMP(str, pattern string) []int {
 	ret := []int{}
+	if pattern == "" {
+		return ret
+	}
 	table := build(pattern)
 	n := len(str)
 	for i, j := 0, 0; i < n; i++ {

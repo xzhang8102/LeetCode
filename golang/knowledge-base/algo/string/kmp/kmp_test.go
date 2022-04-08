@@ -42,12 +42,28 @@ func TestKMP(t *testing.T) {
 		want []int
 	}{
 		{
-			name: "test KMP",
+			name: "test case 1",
 			args: args{
 				str:     "ABC ABCDAB ABCDABCDABDE",
 				pattern: "ABCDABD",
 			},
 			want: []int{15},
+		},
+		{
+			name: "test case 2",
+			args: args{
+				"AABAACAADAABAABA",
+				"AABA",
+			},
+			want: []int{0, 9, 12},
+		},
+		{
+			name: "edge case",
+			args: args{
+				"ab",
+				"",
+			},
+			want: []int{},
 		},
 	}
 	for _, tt := range tests {
