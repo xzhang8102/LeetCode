@@ -14,23 +14,10 @@ import (
 // @lc code=start
 func readBinaryWatch(turnedOn int) []string {
 	ans := []string{}
-	hh := [5][]int{}
-	mm := [7][]int{}
-	for i := 0; i <= 59; i++ {
-		n := bits.OnesCount(uint(i))
-		if i <= 11 {
-			hh[n] = append(hh[n], i)
-		}
-		mm[n] = append(mm[n], i)
-	}
-	for h := 0; h <= 4 && h <= turnedOn; h++ {
-		m := turnedOn - h
-		if m > 6 {
-			continue
-		}
-		for _, hv := range hh[h] {
-			for _, mv := range mm[m] {
-				ans = append(ans, fmt.Sprintf("%d:%02d", hv, mv))
+	for h := 0; h <= 11; h++ {
+		for m := 0; m <= 59; m++ {
+			if bits.OnesCount(uint(h))+bits.OnesCount(uint(m)) == turnedOn {
+				ans = append(ans, fmt.Sprintf("%d:%02d", h, m))
 			}
 		}
 	}
