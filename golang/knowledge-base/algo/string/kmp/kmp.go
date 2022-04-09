@@ -1,5 +1,7 @@
 package kmp
 
+// ref: https://youtu.be/GTJr8OvyEVQ
+
 // build the array of which the ith value is
 // the length of the longest suffix which is
 // also the prefix of the pattern[:i+1]

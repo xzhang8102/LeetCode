@@ -3,6 +3,7 @@ package zfunc
 // ref:
 // https://oi-wiki.org/string/z-func/
 // https://github.com/EndlessCheng/codeforces-go/blob/master/copypasta/strings.go
+// https://youtu.be/CpZh4eF8QBw
 
 // func calcZ(s string) []int {
 // 	n := len(s)
