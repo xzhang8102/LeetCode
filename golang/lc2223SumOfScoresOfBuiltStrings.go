@@ -8,34 +8,33 @@ package golang
 
 // @lc code=start
 func sumScores(s string) int64 {
-	var sum int64 = 0
+	mod, base := int(1e9+7), 31
 	n := len(s)
-	z := make([]int, n)
-	left, right := 0, 0
-	for i := 1; i < n; i++ {
-		if i > right {
-			left, right = i, i
-			for right < n && s[right] == s[right-left] {
-				right++
-			}
-			z[i] = right - left
-			right--
-		} else {
-			if i+z[i-left]-1 < right {
-				z[i] = z[i-left]
+	prefix, mul := make([]int, n+1), make([]int, n+1)
+	mul[0] = 1
+	for i := 1; i <= n; i++ {
+		prefix[i] = (prefix[i-1]*base + int(s[i-1]-'a'+1)) % mod
+		mul[i] = mul[i-1] * base % mod
+	}
+	ans := int64(n)
+	// m: suffix length
+	for m := n - 1; m > 0; m-- {
+		if s[n-m] != s[0] {
+			continue
+		}
+		lo, hi := 1, m+1
+		for lo < hi {
+			mid := lo + (hi-lo)>>1
+			hash := (prefix[n-m+mid] + mod - prefix[n-m]*mul[mid]%mod) % mod
+			if hash == prefix[mid] {
+				lo = mid + 1
 			} else {
-				left = i
-				for right < n && s[right] == s[right-left] {
-					right++
-				}
-				z[i] = right - left
-				right--
+				hi = mid
 			}
 		}
-		sum += int64(z[i])
+		ans += int64(lo - 1)
 	}
-	sum += int64(n)
-	return sum
+	return ans
 }
 
 // @lc code=end
