@@ -1,5 +1,7 @@
 package golang
 
+import "strings"
+
 /*
  * @lc app=leetcode.cn id=405 lang=golang
  *
@@ -11,45 +13,19 @@ func toHex(num int) string {
 	if num == 0 {
 		return "0"
 	}
-	negetive := false
-	if num < 0 {
-		negetive = true
-		num = -num
-	}
-	buf := [8]byte{}
-	for i := 7; num > 0; i-- {
-		buf[i] = byte(num % 16)
-		num /= 16
-	}
-	if negetive {
-		for i := range buf {
-			buf[i] = ^buf[i]
-			buf[i] &= 0x0f
-		}
-		for i := 7; i >= 0; i-- {
-			buf[i]++
-			if buf[i] < 16 {
-				break
-			} else {
-				buf[i] = 0
+	var b strings.Builder
+	for i := 7; i >= 0; i-- {
+		n := (num >> (4 * i)) & 0x0f
+		if n != 0 || b.Len() > 0 {
+			switch {
+			case n >= 10:
+				b.WriteByte(byte(n-10) + 'a')
+			default:
+				b.WriteByte(byte(n) + '0')
 			}
 		}
 	}
-	i := 0
-	for buf[i] == 0 {
-		i++
-	}
-	ans := []byte{}
-	for i < 8 {
-		switch {
-		case buf[i] >= 10:
-			ans = append(ans, buf[i]-10+'a')
-		default:
-			ans = append(ans, buf[i]+'0')
-		}
-		i++
-	}
-	return string(ans)
+	return b.String()
 }
 
 // @lc code=end
