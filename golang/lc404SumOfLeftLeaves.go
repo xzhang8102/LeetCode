@@ -19,15 +19,25 @@ func sumOfLeftLeaves(root *TreeNode) int {
 	if root == nil {
 		return 0
 	}
-	sum := 0
-	if root.Left != nil {
-		if root.Left.Left == nil && root.Left.Right == nil {
-			sum += root.Left.Val
-		} else {
-			sum += sumOfLeftLeaves(root.Left)
+	ans := 0
+	q := []*TreeNode{root}
+	for len(q) > 0 {
+		size := len(q)
+		for _, node := range q[:size] {
+			if node.Left != nil {
+				if node.Left.Left == nil && node.Left.Right == nil {
+					ans += node.Left.Val
+				} else {
+					q = append(q, node.Left)
+				}
+			}
+			if node.Right != nil {
+				q = append(q, node.Right)
+			}
 		}
+		q = q[size:]
 	}
-	return sum + sumOfLeftLeaves(root.Right)
+	return ans
 }
 
 // @lc code=end
