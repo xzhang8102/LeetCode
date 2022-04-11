@@ -1,10 +1,5 @@
 package golang
 
-import (
-	"strconv"
-	"strings"
-)
-
 /*
  * @lc app=leetcode.cn id=408 lang=golang
  *
@@ -14,33 +9,27 @@ import (
 // @lc code=start
 func validWordAbbreviation(word string, abbr string) bool {
 	n, m := len(word), len(abbr)
-	var b strings.Builder
-	b.Grow(n)
 	i, j := 0, 0
-	for i < m {
+	for i < m && j < n {
 		if abbr[i] >= 'a' && abbr[i] <= 'z' {
-			b.WriteByte(abbr[i])
+			if abbr[i] != word[j] {
+				return false
+			}
 			i++
 			j++
 		} else {
 			if abbr[i] == '0' {
 				return false
 			}
-			start := i
+			numLen := 0
 			for i < m && abbr[i] >= '0' && abbr[i] <= '9' {
+				numLen = numLen*10 + int(abbr[i]-'0')
 				i++
 			}
-			if i > start {
-				numLen, _ := strconv.Atoi(abbr[start:i])
-				if j+numLen > n {
-					return false
-				}
-				b.WriteString(word[j : j+numLen])
-				j += numLen
-			}
+			j += numLen
 		}
 	}
-	return b.String() == word
+	return i == m && j == n
 }
 
 // @lc code=end
