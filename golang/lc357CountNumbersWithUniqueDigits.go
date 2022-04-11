@@ -11,11 +11,15 @@ func countNumbersWithUniqueDigits(n int) int {
 	if n == 0 {
 		return 1
 	}
-	prev, curr := 1, 10
-	for i := 2; i <= n; i++ {
-		prev, curr = curr, curr+(curr-prev)*(11-i)
+	if n == 1 {
+		return 10
 	}
-	return curr
+	ans, options := 10, 9
+	for i := 0; i <= n-2; i++ {
+		options *= 9 - i
+		ans += options
+	}
+	return ans
 }
 
 // @lc code=end
