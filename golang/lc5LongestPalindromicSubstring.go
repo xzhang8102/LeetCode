@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func longestPalindrome(s string) string {
+func lc5longestPalindrome(s string) string {
 	if len(s) <= 1 {
 		return s
 	}
