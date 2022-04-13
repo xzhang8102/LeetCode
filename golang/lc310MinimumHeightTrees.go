@@ -8,38 +8,38 @@ package golang
 
 // @lc code=start
 func findMinHeightTrees(n int, edges [][]int) []int {
-	graph := make([]map[int]bool, n)
-	for _, edge := range edges {
-		if graph[edge[0]] == nil {
-			graph[edge[0]] = map[int]bool{}
-		}
-		graph[edge[0]][edge[1]] = true
-		if graph[edge[1]] == nil {
-			graph[edge[1]] = map[int]bool{}
-		}
-		graph[edge[1]][edge[0]] = true
+	if n == 1 {
+		return []int{0}
 	}
-	leaves := []int{}
-	for i, degree := range graph {
-		if len(degree) <= 1 {
-			leaves = append(leaves, i)
+	graph := make([][]int, n)
+	degree := make([]int, n)
+	for _, edge := range edges {
+		e1, e2 := edge[0], edge[1]
+		graph[e1] = append(graph[e1], e2)
+		graph[e2] = append(graph[e2], e1)
+		degree[e1]++
+		degree[e2]++
+	}
+	ans := []int{}
+	for i, d := range degree {
+		if d == 1 {
+			ans = append(ans, i)
 		}
 	}
 	for n > 2 {
-		n -= len(leaves)
-		size := len(leaves)
-		for i := 0; i < size; i++ {
-			leaf := leaves[i]
-			for neighbor := range graph[leaf] {
-				delete(graph[neighbor], leaf)
-				if len(graph[neighbor]) == 1 {
-					leaves = append(leaves, neighbor)
+		n -= len(ans)
+		tmp := ans
+		ans = nil
+		for _, leaf := range tmp {
+			for _, neighbour := range graph[leaf] {
+				degree[neighbour]--
+				if degree[neighbour] == 1 {
+					ans = append(ans, neighbour)
 				}
 			}
 		}
-		leaves = leaves[size:]
 	}
-	return leaves
+	return ans
 }
 
 // @lc code=end
