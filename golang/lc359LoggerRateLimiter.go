@@ -11,7 +11,7 @@ type Logger struct {
 	history map[string]int
 }
 
-func Constructor() Logger {
+func lc359Constructor() Logger {
 	return Logger{map[string]int{}}
 }
 
