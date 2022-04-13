@@ -8,80 +8,38 @@ package golang
 
 // @lc code=start
 func findMinHeightTrees(n int, edges [][]int) []int {
-	graph := make([][]int, n)
-	for i := range graph {
-		graph[i] = []int{}
-	}
+	graph := make([]map[int]bool, n)
 	for _, edge := range edges {
-		graph[edge[0]] = append(graph[edge[0]], edge[1])
-		graph[edge[1]] = append(graph[edge[1]], edge[0])
-	}
-	// 往下的最大高度
-	down1 := make([]int, n)
-	// 往下的次大高度
-	down2 := make([]int, n)
-	// 往上的最大高度
-	up := make([]int, n)
-	// 记录down1[cur]由哪个孩子节点转移
-	p := make([]int, n)
-	for i := range p {
-		p[i] = -1
-	}
-	var dfs1 func(cur, fa int) int
-	dfs1 = func(cur, fa int) int {
-		for _, neighbour := range graph[cur] {
-			if neighbour == fa {
-				continue
-			}
-			height := dfs1(neighbour, cur) + 1
-			if height > down1[cur] {
-				down2[cur] = down1[cur]
-				down1[cur] = height
-				p[cur] = neighbour
-			} else if height > down2[cur] {
-				down2[cur] = height
-			}
+		if graph[edge[0]] == nil {
+			graph[edge[0]] = map[int]bool{}
 		}
-		return down1[cur]
+		graph[edge[0]][edge[1]] = true
+		if graph[edge[1]] == nil {
+			graph[edge[1]] = map[int]bool{}
+		}
+		graph[edge[1]][edge[0]] = true
 	}
-
-	var dfs2 func(cur, fa int)
-	dfs2 = func(cur, fa int) {
-		for _, neighbour := range graph[cur] {
-			if neighbour == fa {
-				continue
-			}
-			if p[cur] != neighbour {
-				up[neighbour] = lc310Max(up[neighbour], down1[cur]+1)
-			} else {
-				up[neighbour] = lc310Max(up[neighbour], down2[cur]+1)
-			}
-			up[neighbour] = lc310Max(up[neighbour], up[cur]+1)
-			dfs2(neighbour, cur)
+	leaves := []int{}
+	for i, degree := range graph {
+		if len(degree) <= 1 {
+			leaves = append(leaves, i)
 		}
 	}
-
-	dfs1(0, -1)
-	dfs2(0, -1)
-	ans := []int{}
-	min := n + 1
-	for i := 0; i < n; i++ {
-		height := lc310Max(down1[i], up[i])
-		if height < min {
-			min = height
-			ans = []int{i}
-		} else if height == min {
-			ans = append(ans, i)
+	for n > 2 {
+		n -= len(leaves)
+		size := len(leaves)
+		for i := 0; i < size; i++ {
+			leaf := leaves[i]
+			for neighbor := range graph[leaf] {
+				delete(graph[neighbor], leaf)
+				if len(graph[neighbor]) == 1 {
+					leaves = append(leaves, neighbor)
+				}
+			}
 		}
+		leaves = leaves[size:]
 	}
-	return ans
-}
-
-func lc310Max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return leaves
 }
 
 // @lc code=end
