@@ -41,22 +41,42 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
 	if !has {
 		return 0
 	}
-	q := []int{beginId}
-	dist := make([]int, len(mapping))
-	for i := range dist {
-		dist[i] = math.MaxInt64
+
+	distBegin := make([]int, len(mapping))
+	distEnd := make([]int, len(mapping))
+	for i := range distBegin {
+		distBegin[i] = math.MaxInt64
+		distEnd[i] = math.MaxInt64
 	}
-	dist[beginId] = 0
-	for len(q) > 0 {
-		v := q[0]
-		q = q[1:]
-		if v == endId {
-			return dist[endId]/2 + 1
+	distBegin[beginId] = 0
+	distEnd[endId] = 0
+	qBegin := []int{beginId}
+	qEnd := []int{endId}
+	for len(qBegin) > 0 && len(qEnd) > 0 {
+		q := qBegin
+		qBegin = nil
+		for _, v := range q {
+			if distEnd[v] < math.MaxInt64 {
+				return (distBegin[v]+distEnd[v])/2 + 1
+			}
+			for _, neighbour := range graph[v] {
+				if distBegin[neighbour] == math.MaxInt64 {
+					distBegin[neighbour] = distBegin[v] + 1
+					qBegin = append(qBegin, neighbour)
+				}
+			}
 		}
-		for _, neighbour := range graph[v] {
-			if dist[neighbour] == math.MaxInt64 {
-				dist[neighbour] = dist[v] + 1
-				q = append(q, neighbour)
+		q = qEnd
+		qEnd = nil
+		for _, v := range q {
+			if distBegin[v] < math.MaxInt64 {
+				return (distBegin[v]+distEnd[v])/2 + 1
+			}
+			for _, neighbour := range graph[v] {
+				if distEnd[neighbour] == math.MaxInt64 {
+					distEnd[neighbour] = distEnd[v] + 1
+					qEnd = append(qEnd, neighbour)
+				}
 			}
 		}
 	}
