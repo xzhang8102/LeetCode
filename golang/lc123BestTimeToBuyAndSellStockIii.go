@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func maxProfit(prices []int) int {
+func lc123maxProfit(prices []int) int {
 	n := len(prices)
 	// dp := make([][2][3]int, n)
 	// dp[i][j][k] - the ith day; current share 0/1; trade counts 0/1/2
