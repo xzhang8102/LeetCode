@@ -14,7 +14,7 @@ package golang
  *     Next *ListNode
  * }
  */
-func partition(head *ListNode, x int) *ListNode {
+func lc86partition(head *ListNode, x int) *ListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
