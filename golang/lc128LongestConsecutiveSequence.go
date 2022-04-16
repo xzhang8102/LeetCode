@@ -8,21 +8,19 @@ package golang
 
 // @lc code=start
 func longestConsecutive(nums []int) int {
-	set := map[int]bool{}
-	for _, num := range nums {
-		set[num] = true
-	}
+	dict := map[int]int{}
 	ans := 0
 	for _, num := range nums {
-		if !set[num-1] { // num is the start of the sequence
-			curr, streak := num, 1
-			for set[curr+1] {
-				curr++
-				streak++
-			}
-			if ans < streak {
+		if _, ok := dict[num]; !ok {
+			left := dict[num-1]
+			right := dict[num+1]
+			streak := left + 1 + right
+			dict[num] = streak
+			if streak > ans {
 				ans = streak
 			}
+			dict[num-left] = streak
+			dict[num+right] = streak
 		}
 	}
 	return ans
