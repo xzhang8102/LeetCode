@@ -24,6 +24,14 @@ func Test_getNumber(t *testing.T) {
 			},
 			want: 5,
 		},
+		{
+			name: "test 2",
+			args: args{
+				root: &TreeNode{1, nil, &TreeNode{2, nil, &TreeNode{3, nil, &TreeNode{4, nil, &TreeNode{Val: 5}}}}},
+				ops:  [][]int{{1, 2, 4}, {1, 1, 3}, {0, 3, 5}},
+			},
+			want: 2,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
