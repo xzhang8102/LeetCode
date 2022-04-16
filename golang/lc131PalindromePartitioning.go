@@ -10,6 +10,19 @@ package golang
 func partition(s string) [][]string {
 	ans := [][]string{}
 	n := len(s)
+	dp := make([][]bool, n)
+	for i := range dp {
+		dp[i] = make([]bool, n)
+		dp[i][i] = true
+	}
+	for i := n - 1; i >= 0; i-- {
+		for j := i + 1; j < n; j++ {
+			dp[i][j] = s[i] == s[j]
+			if j-i > 1 && dp[i][j] {
+				dp[i][j] = dp[i][j] && dp[i+1][j-1]
+			}
+		}
+	}
 	pick := []string{}
 	var dfs func(start int)
 	dfs = func(start int) {
@@ -19,17 +32,10 @@ func partition(s string) [][]string {
 			ans = append(ans, tmp)
 			return
 		}
-		for length := 1; length <= n-start; length++ {
-			valid := true
-			for i := start; i < start+length/2; i++ {
-				if s[i] != s[start+length-1-(i-start)] {
-					valid = false
-					break
-				}
-			}
-			if valid {
-				pick = append(pick, s[start:start+length])
-				dfs(start + length)
+		for i := start; i < n; i++ {
+			if dp[start][i] {
+				pick = append(pick, s[start:i+1])
+				dfs(i + 1)
 				pick = pick[:len(pick)-1]
 			}
 		}
