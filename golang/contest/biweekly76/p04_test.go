@@ -15,10 +15,10 @@ func Test_maximumScore(t *testing.T) {
 		{
 			name: "test case",
 			args: args{
-				scores: []int{8, 7, 1, 26},
-				edges:  [][]int{{3, 1}, {1, 2}, {2, 0}, {0, 3}, {2, 3}, {0, 1}},
+				scores: []int{14, 12, 10, 8, 1, 2, 3, 1},
+				edges:  [][]int{{0, 1}, {0, 2}, {0, 3}, {0, 4}, {1, 5}, {1, 6}, {1, 7}, {1, 2}},
 			},
-			want: 42,
+			want: 44,
 		},
 	}
 	for _, tt := range tests {
