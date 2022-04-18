@@ -8,26 +8,19 @@ package golang
 
 // @lc code=start
 func lexicalOrder(n int) []int {
-	ans := make([]int, 0, n)
-	var dfs func(int)
-	dfs = func(start int) {
-		if start > n {
-			return
-		}
-		bound := start + 9
-		if start == 1 {
-			bound = 9
-		}
-		for i := start; i <= bound; i++ {
-			if i <= n {
-				ans = append(ans, i)
-				dfs(i * 10)
-			} else {
-				return
+	ans := make([]int, n)
+	num := 1
+	for i := range ans {
+		ans[i] = num
+		if num*10 <= n {
+			num *= 10
+		} else {
+			for num%10 == 9 || num+1 > n {
+				num /= 10
 			}
+			num++
 		}
 	}
-	dfs(1)
 	return ans
 }
 
