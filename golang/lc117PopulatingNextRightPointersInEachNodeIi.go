@@ -17,11 +17,11 @@ package golang
  * }
  */
 
-func lc117Connect(root *Node) *Node {
+func lc117Connect(root *LinkedTreeNode) *LinkedTreeNode {
 	start := root
 	for start != nil {
-		var newStart, prev *Node
-		handle := func(curr *Node) {
+		var newStart, prev *LinkedTreeNode
+		handle := func(curr *LinkedTreeNode) {
 			if curr == nil {
 				return
 			}

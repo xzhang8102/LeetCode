@@ -15,13 +15,19 @@ package golang
  * 	 Next  *Node
  * }
  */
+type LinkedTreeNode struct {
+	Val   int
+	Left  *LinkedTreeNode
+	Right *LinkedTreeNode
+	Next  *LinkedTreeNode
+}
 
 // @lc code=start
-func lc116Connect(root *Node) *Node {
+func lc116Connect(root *LinkedTreeNode) *LinkedTreeNode {
 	if root == nil {
 		return nil
 	}
-	queue := []*Node{root}
+	queue := []*LinkedTreeNode{root}
 	for len(queue) > 0 {
 		size := len(queue)
 		tmp := queue
