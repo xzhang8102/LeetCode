@@ -7,36 +7,31 @@ package golang
  */
 
 /**
- * Definition for a Node.
+ * Definition for a GraphNode.
  */
-type Node struct {
+type GraphNode struct {
 	Val       int
-	Neighbors []*Node
+	Neighbors []*GraphNode
 }
 
 // @lc code=start
-func cloneGraph(node *Node) *Node {
+func cloneGraph(node *GraphNode) *GraphNode {
 	if node == nil {
 		return nil
 	}
-	ans := &Node{Val: node.Val}
-	q := []*Node{node}
-	visited := map[*Node]*Node{node: ans}
-	for len(q) > 0 {
-		origin := q[0]
-		clone := visited[origin]
-		q = q[1:]
-		for _, ne := range origin.Neighbors {
-			// copy management
-			if _, ok := visited[ne]; !ok {
-				visited[ne] = &Node{Val: ne.Val}
-				q = append(q, ne)
+	visited := map[*GraphNode]*GraphNode{node: {Val: node.Val}}
+	var dfs func(*GraphNode)
+	dfs = func(n *GraphNode) {
+		for _, ne := range n.Neighbors {
+			if _, seen := visited[ne]; !seen {
+				visited[ne] = &GraphNode{Val: ne.Val}
+				dfs(ne)
 			}
-			// keep the shape
-			clone.Neighbors = append(clone.Neighbors, visited[ne])
+			visited[n].Neighbors = append(visited[n].Neighbors, visited[ne])
 		}
 	}
-	return ans
+	dfs(node)
+	return visited[node]
 }
 
 // @lc code=end
