@@ -15,15 +15,12 @@ func maxRotateFunction(nums []int) int {
 		ans += v * i
 		sum += v
 	}
-	last := n - 1
-	prev := ans
-	for i := 1; i < n; i++ {
-		curr := (prev - (n-1)*nums[last]) + sum - nums[last]
-		if curr > ans {
-			ans = curr
+	f := ans
+	for last := n - 1; last >= 0; last-- {
+		f += sum - n*nums[last]
+		if f > ans {
+			ans = f
 		}
-		last--
-		prev = curr
 	}
 	return ans
 }
