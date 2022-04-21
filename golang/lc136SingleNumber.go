@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func singleNumber(nums []int) int {
+func lc136singleNumber(nums []int) int {
 	ans := 0
 	for _, n := range nums {
 		ans ^= n
