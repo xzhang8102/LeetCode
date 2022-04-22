@@ -15,20 +15,35 @@ package golang
  * }
  */
 func reorderList(head *ListNode) {
-	nodes := []*ListNode{}
-	for ptr := head; ptr != nil; ptr = ptr.Next {
-		nodes = append(nodes, ptr)
+	if head == nil || head.Next == nil {
+		return
 	}
-	n := len(nodes)
-	for i, j := 0, n-1; i < n/2; i, j = i+1, j-1 {
-		nodes[i].Next = nodes[j]
-		if i+1 != j {
-			nodes[j].Next = nodes[i+1]
-			nodes[j-1].Next = nil
-		} else {
-			nodes[j].Next = nil
-		}
+	slow, fast := head, head.Next
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
 	}
+	head2 := lc143Reverse(slow.Next)
+	slow.Next = nil
+	p, p1, p2 := head, head, head2
+	for p1 != nil && p2 != nil {
+		p1 = p1.Next
+		p.Next = p2
+		p = p.Next
+		p2 = p2.Next
+		p.Next = p1
+		p = p.Next
+	}
+}
+
+func lc143Reverse(node *ListNode) *ListNode {
+	var prev, curr *ListNode = nil, node
+	for curr != nil {
+		next := curr.Next
+		curr.Next = prev
+		prev, curr = curr, next
+	}
+	return prev
 }
 
 // @lc code=end
