@@ -7,34 +7,38 @@ package golang
  */
 
 /**
- * Definition for a Node.
+ * Definition for a ListNodeWithRandom.
  */
-type Node struct {
+type ListNodeWithRandom struct {
 	Val    int
-	Next   *Node
-	Random *Node
+	Next   *ListNodeWithRandom
+	Random *ListNodeWithRandom
 }
 
 // @lc code=start
-func copyRandomList(head *Node) *Node {
+func copyRandomList(head *ListNodeWithRandom) *ListNodeWithRandom {
 	if head == nil {
 		return nil
 	}
-	clone := &Node{}
-	mapping := map[*Node]*Node{}
-	for ptr1, ptr2 := head, clone; ptr1 != nil; ptr1, ptr2 = ptr1.Next, ptr2.Next {
-		mapping[ptr1] = ptr2
-		ptr2.Val = ptr1.Val
-		if ptr1.Next != nil {
-			ptr2.Next = &Node{}
+	for ptr := head; ptr != nil; ptr = ptr.Next.Next {
+		next := ptr.Next
+		ptr.Next = &ListNodeWithRandom{ptr.Val, next, nil}
+	}
+	for ptr := head; ptr != nil; ptr = ptr.Next.Next {
+		random := ptr.Random
+		if random != nil {
+			ptr.Next.Random = random.Next
 		}
 	}
-	for ptr1, ptr2 := head, clone; ptr1 != nil; ptr1, ptr2 = ptr1.Next, ptr2.Next {
-		if ptr1.Random != nil {
-			ptr2.Random = mapping[ptr1.Random]
+	ans := head.Next
+	for ptr1, ptr2 := head, head.Next; ptr1 != nil && ptr2 != nil; ptr1, ptr2 = ptr1.Next, ptr2.Next {
+		next := ptr2.Next
+		ptr1.Next = next
+		if next != nil {
+			ptr2.Next = next.Next
 		}
 	}
-	return clone
+	return ans
 }
 
 // @lc code=end
