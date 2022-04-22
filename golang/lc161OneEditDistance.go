@@ -9,27 +9,22 @@ package golang
 // @lc code=start
 func isOneEditDistance(s string, t string) bool {
 	n, m := len(s), len(t)
-	dp := make([][]int, n+1)
-	for i := range dp {
-		dp[i] = make([]int, m+1)
-		if i == 0 {
-			for j := range dp[i] {
-				dp[i][j] = j
-			}
-		} else {
-			dp[i][0] = i
-		}
+	if n > m {
+		return isOneEditDistance(t, s)
 	}
-	for i := 1; i <= n; i++ {
-		for j := 1; j <= m; j++ {
-			if s[i-1] == t[j-1] {
-				dp[i][j] = dp[i-1][j-1]
+	if m-n > 1 {
+		return false
+	}
+	for i := 0; i < n; i++ {
+		if s[i] != t[i] {
+			if n == m {
+				return s[i+1:] == t[i+1:]
 			} else {
-				dp[i][j] = lc161Min(dp[i-1][j-1]+1, lc161Min(dp[i-1][j]+1, dp[i][j-1]+1))
+				return s[i:] == t[i+1:]
 			}
 		}
 	}
-	return dp[n][m] == 1
+	return m-n == 1
 }
 
 func lc161Min(a, b int) int {
