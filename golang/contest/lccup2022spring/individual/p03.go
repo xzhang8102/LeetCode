@@ -1,4 +1,4 @@
-package lccup2022spring
+package individual
 
 import "sort"
 

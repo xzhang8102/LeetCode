@@ -1,4 +1,4 @@
-package lccup2022spring
+package individual
 
 func perfectMenu(materials []int, cookbooks [][]int, attribute [][]int, limit int) int {
 	ans := -1

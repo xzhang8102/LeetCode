@@ -1,4 +1,4 @@
-package lccup2022spring
+package individual
 
 func giveGem(gem []int, operations [][]int) int {
 	for _, op := range operations {
