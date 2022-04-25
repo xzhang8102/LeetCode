@@ -11,21 +11,21 @@ import (
  */
 
 // @lc code=start
-type Solution struct {
+type lc384Solution struct {
 	data []int
 }
 
-func lc384Constructor(nums []int) Solution {
-	return Solution{
+func lc384Constructor(nums []int) lc384Solution {
+	return lc384Solution{
 		nums,
 	}
 }
 
-func (this *Solution) Reset() []int {
+func (this *lc384Solution) Reset() []int {
 	return this.data
 }
 
-func (this *Solution) Shuffle() []int {
+func (this *lc384Solution) Shuffle() []int {
 	res := append([]int(nil), this.data...)
 	for i := range res {
 		j := i + rand.Intn(len(res)-i)
