@@ -9,24 +9,24 @@ import "math/rand"
  */
 
 // @lc code=start
-type Solution struct {
-	data map[int][]int
-}
+type Solution []int
 
 func Constructor(nums []int) Solution {
-	dict := map[int][]int{}
-	for i, num := range nums {
-		dict[num] = append(dict[num], i)
-	}
-	return Solution{dict}
+	return nums
 }
 
 func (this *Solution) Pick(target int) int {
-	if freq := len(this.data[target]); freq == 1 {
-		return this.data[target][0]
-	} else {
-		return this.data[target][rand.Intn(freq)]
+	cnt := 0
+	ans := 0
+	for i, num := range *this {
+		if num == target {
+			cnt++
+			if rand.Intn(cnt) == 0 {
+				ans = i
+			}
+		}
 	}
+	return ans
 }
 
 /**
