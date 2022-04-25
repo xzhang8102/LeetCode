@@ -9,21 +9,23 @@ package golang
 // @lc code=start
 func projectionArea(grid [][]int) int {
 	n, m := len(grid), len(grid[0])
-	row, col := make([]int, n), make([]int, m)
 	ans := 0
+	first := 0
 	for i := 0; i < n; i++ {
+		first = lc883Max(first, grid[i][0])
 		for j := 0; j < m; j++ {
-			row[i] = lc883Max(row[i], grid[i][j])
-			col[j] = lc883Max(col[j], grid[i][j])
 			if grid[i][j] > 0 {
 				ans++
 			}
+			grid[i][0] = lc883Max(grid[i][0], grid[i][j])
+			if j > 0 {
+				grid[0][j] = lc883Max(grid[0][j], grid[i][j])
+			}
 		}
+		ans += grid[i][0]
 	}
-	for _, v := range row {
-		ans += v
-	}
-	for _, v := range col {
+	ans += first
+	for _, v := range grid[0][1:] {
 		ans += v
 	}
 	return ans
