@@ -12,22 +12,22 @@ import "strconv"
 func evalRPN(tokens []string) int {
 	stack := []int{}
 	for _, token := range tokens {
-		switch size := len(stack); token {
-		case "+", "-", "*", "/":
-			op1, op2 := stack[size-2], stack[size-1]
-			stack = stack[:size-2]
+		val, err := strconv.Atoi(token)
+		if err == nil {
+			stack = append(stack, val)
+		} else {
+			op1, op2 := stack[len(stack)-2], stack[len(stack)-1]
+			stack = stack[:len(stack)-2]
 			res := op1 + op2
-			if token == "-" {
+			switch token {
+			case "-":
 				res = op1 - op2
-			} else if token == "*" {
+			case "*":
 				res = op1 * op2
-			} else if token == "/" {
+			case "/":
 				res = op1 / op2
 			}
 			stack = append(stack, res)
-		default:
-			val, _ := strconv.Atoi(token)
-			stack = append(stack, val)
 		}
 	}
 	return stack[0]
