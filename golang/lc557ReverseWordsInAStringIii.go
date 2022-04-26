@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func reverseWords(s string) string {
+func lc557reverseWords(s string) string {
 	n := len(s)
 	ans := make([]byte, 0)
 	for i := 0; i < n; {
