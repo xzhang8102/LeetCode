@@ -8,41 +8,49 @@ package golang
 
 // @lc code=start
 func pacificAtlantic(heights [][]int) [][]int {
-	row := len(heights)
-	if row == 0 {
-		return nil
-	}
-	col := len(heights[0])
-	pacific, atlantic := make([][]int, row), make([][]int, row)
-	for i := range pacific {
-		pacific[i] = make([]int, col)
-		atlantic[i] = make([]int, col)
-	}
+	n, m := len(heights), len(heights[0])
 	directions := [4][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
-	var dfs func(int, int, [][]int)
-	dfs = func(r, c int, grid [][]int) {
-		grid[r][c] = 1
-		for _, dir := range directions {
-			newR, newC := r+dir[0], c+dir[1]
-			if newR >= 0 && newR < row && newC >= 0 && newC < col {
-				if grid[newR][newC] != 1 && heights[newR][newC] >= heights[r][c] {
-					dfs(newR, newC, grid)
+	bfs := func(q *[]int, record []bool) {
+		for len(*q) > 0 {
+			tmp := *q
+			*q = []int{}
+			for _, coord := range tmp {
+				r, c := coord/m, coord%m
+				for _, dir := range directions {
+					newR, newC := r+dir[0], c+dir[1]
+					if newR >= 0 && newR < n && newC >= 0 && newC < m && !record[newR*m+newC] && heights[newR][newC] >= heights[r][c] {
+						record[newR*m+newC] = true
+						*q = append(*q, newR*m+newC)
+					}
 				}
 			}
 		}
 	}
-	for i := 0; i < row; i++ {
-		dfs(i, 0, pacific)
-		dfs(i, col-1, atlantic)
+	pacific := make([]bool, n*m)
+	atlantic := make([]bool, n*m)
+	q := []int{}
+	for i := 0; i < m; i++ {
+		pacific[i] = true
+		q = append(q, i)
 	}
-	for i := 0; i < col; i++ {
-		dfs(0, i, pacific)
-		dfs(row-1, i, atlantic)
+	for i := 1; i < n; i++ {
+		pacific[i*m] = true
+		q = append(q, i*m)
 	}
+	bfs(&q, pacific)
+	for i := 0; i < m; i++ {
+		atlantic[(n-1)*m+i] = true
+		q = append(q, (n-1)*m+i)
+	}
+	for i := 0; i < n-1; i++ {
+		atlantic[i*m+m-1] = true
+		q = append(q, i*m+m-1)
+	}
+	bfs(&q, atlantic)
 	ans := [][]int{}
-	for i := 0; i < row; i++ {
-		for j := 0; j < col; j++ {
-			if pacific[i][j] == 1 && atlantic[i][j] == 1 {
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			if pacific[i*m+j] && atlantic[i*m+j] {
 				ans = append(ans, []int{i, j})
 			}
 		}
