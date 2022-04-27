@@ -8,18 +8,13 @@ package golang
 
 // @lc code=start
 func sortArrayByParity(nums []int) []int {
-	n := len(nums)
-	ans := make([]int, n)
-	for i, j, k := 0, 0, n-1; i < n; i++ {
-		if nums[i]&1 == 0 {
-			ans[j] = nums[i]
-			j++
-		} else {
-			ans[k] = nums[i]
-			k--
+	for i, j := 0, 0; j < len(nums); j++ {
+		if nums[j]&1 == 0 {
+			nums[i], nums[j] = nums[j], nums[i]
+			i++
 		}
 	}
-	return ans
+	return nums
 }
 
 // @lc code=end
