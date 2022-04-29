@@ -20,27 +20,31 @@ type Node struct {
 
 // @lc code=start
 func construct(grid [][]int) *Node {
-	var dfs func([][]int, int, int) *Node
-	dfs = func(rows [][]int, start, end int) *Node {
-		for _, row := range rows {
-			for _, v := range row[start:end] {
-				if v != rows[0][start] {
-					rMid := len(rows) / 2
-					cMid := (start + end) / 2
-					return &Node{
-						false,
-						false,
-						dfs(rows[:rMid], start, cMid),
-						dfs(rows[:rMid], cMid, end),
-						dfs(rows[rMid:], start, cMid),
-						dfs(rows[rMid:], cMid, end),
-					}
-				}
-			}
+	n := len(grid)
+	pre := make([][]int, n+1)
+	pre[0] = make([]int, n+1)
+	for i := 0; i < n; i++ {
+		pre[i+1] = make([]int, n+1)
+		for j := 0; j < n; j++ {
+			pre[i+1][j+1] = grid[i][j] + pre[i+1][j] + pre[i][j+1] - pre[i][j]
 		}
-		return &Node{Val: rows[0][start] == 1, IsLeaf: true}
 	}
-	return dfs(grid, 0, len(grid))
+	var dfs func(r0, r1, c0, c1 int) *Node
+	dfs = func(r0, r1, c0, c1 int) *Node {
+		total := pre[r1][c1] - pre[r1][c0] - pre[r0][c1] + pre[r0][c0]
+		if total == 0 || total == (r1-r0)*(c1-c0) {
+			return &Node{Val: grid[r0][c0] == 1, IsLeaf: true}
+		}
+		return &Node{
+			false,
+			false,
+			dfs(r0, (r0+r1)/2, c0, (c0+c1)/2),
+			dfs(r0, (r0+r1)/2, (c0+c1)/2, c1),
+			dfs((r0+r1)/2, r1, c0, (c0+c1)/2),
+			dfs((r0+r1)/2, r1, (c0+c1)/2, c1),
+		}
+	}
+	return dfs(0, n, 0, n)
 }
 
 // @lc code=end
