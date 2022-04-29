@@ -20,49 +20,27 @@ type Node struct {
 
 // @lc code=start
 func construct(grid [][]int) *Node {
-	if len(grid) == 1 {
-		return &Node{
-			Val:    grid[0][0] == 1,
-			IsLeaf: true,
-		}
-	}
-	root := &Node{}
-	same := true
-	for _, row := range grid {
-		for _, v := range row {
-			if v != grid[0][0] {
-				same = false
-				break
+	var dfs func([][]int, int, int) *Node
+	dfs = func(rows [][]int, start, end int) *Node {
+		for _, row := range rows {
+			for _, v := range row[start:end] {
+				if v != rows[0][start] {
+					rMid := len(rows) / 2
+					cMid := (start + end) / 2
+					return &Node{
+						false,
+						false,
+						dfs(rows[:rMid], start, cMid),
+						dfs(rows[:rMid], cMid, end),
+						dfs(rows[rMid:], start, cMid),
+						dfs(rows[rMid:], cMid, end),
+					}
+				}
 			}
 		}
-		if !same {
-			break
-		}
+		return &Node{Val: rows[0][start] == 1, IsLeaf: true}
 	}
-	if same {
-		root.IsLeaf = true
-		root.Val = grid[0][0] == 1
-	} else {
-		n := len(grid)
-		tmp := make([][]int, n/2)
-		for i := range tmp {
-			tmp[i] = grid[i][:n/2]
-		}
-		root.TopLeft = construct(tmp)
-		for i := range tmp {
-			tmp[i] = grid[i][n/2:]
-		}
-		root.TopRight = construct(tmp)
-		for i := range tmp {
-			tmp[i] = grid[n/2+i][:n/2]
-		}
-		root.BottomLeft = construct(tmp)
-		for i := range tmp {
-			tmp[i] = grid[n/2+i][n/2:]
-		}
-		root.BottomRight = construct(tmp)
-	}
-	return root
+	return dfs(grid, 0, len(grid))
 }
 
 // @lc code=end
