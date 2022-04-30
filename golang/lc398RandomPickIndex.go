@@ -11,7 +11,7 @@ import "math/rand"
 // @lc code=start
 type Solution []int
 
-func Constructor(nums []int) Solution {
+func lc398Constructor(nums []int) Solution {
 	return nums
 }
 

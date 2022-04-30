@@ -8,37 +8,44 @@ package golang
 
 // @lc code=start
 type NumArray struct {
-	data   []int
-	presum []int
+	nums []int
+	tree []int
 }
 
-func lc307Constructor(nums []int) NumArray {
-	n := len(nums)
-	presum := make([]int, n)
-	presum[0] = nums[0]
-	for i := 1; i < n; i++ {
-		presum[i] = presum[i-1] + nums[i]
-	}
-	return NumArray{
+func Constructor(nums []int) NumArray {
+	arr := NumArray{
 		nums,
-		presum,
+		make([]int, len(nums)+1),
 	}
+	for i, num := range nums {
+		arr.treeUpdate(i+1, num)
+	}
+	return arr
 }
 
 func (this *NumArray) Update(index int, val int) {
-	diff := val - this.data[index]
-	for i := index; i < len(this.data); i++ {
-		this.presum[i] += diff
+	this.treeUpdate(index+1, val-this.nums[index])
+	this.nums[index] = val
+}
+
+func (bit *NumArray) treeUpdate(index, diff int) {
+	for index < len(bit.tree) {
+		bit.tree[index] += diff
+		index += index & (-index)
 	}
-	this.data[index] = val
 }
 
 func (this *NumArray) SumRange(left int, right int) int {
-	if left == 0 {
-		return this.presum[right]
-	} else {
-		return this.presum[right] - this.presum[left-1]
+	return this.treeQuery(right+1) - this.treeQuery(left)
+}
+
+func (bit *NumArray) treeQuery(index int) int {
+	ans := 0
+	for index > 0 {
+		ans += bit.tree[index]
+		index -= index & (-index)
 	}
+	return ans
 }
 
 /**
