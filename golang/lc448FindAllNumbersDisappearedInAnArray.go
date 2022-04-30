@@ -9,14 +9,14 @@ package golang
 // @lc code=start
 func findDisappearedNumbers(nums []int) []int {
 	n := len(nums)
-	freq := make([]int, n+1)
 	for _, num := range nums {
-		freq[num]++
+		i := (num - 1) % n
+		nums[i] += n
 	}
 	ans := []int{}
-	for i := 1; i <= n; i++ {
-		if freq[i] == 0 {
-			ans = append(ans, i)
+	for i, num := range nums {
+		if num <= n {
+			ans = append(ans, i+1)
 		}
 	}
 	return ans
