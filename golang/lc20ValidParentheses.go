@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func isValid(s string) bool {
+func lc20isValid(s string) bool {
 	if len(s)%2 == 1 {
 		return false
 	}
