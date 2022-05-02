@@ -3,6 +3,7 @@ package golang
 import (
 	"sort"
 	"strings"
+	"unicode"
 )
 
 /*
@@ -13,32 +14,20 @@ import (
 
 // @lc code=start
 func reorderLogFiles(logs []string) []string {
-	n := len(logs)
-	ans := make([]string, n)
-	letter, digit := 0, n-1
-	for _, log := range logs {
-		i := strings.IndexByte(log, ' ')
-		if log[i+1] >= '0' && log[i+1] <= '9' {
-			ans[digit] = log
-			digit--
-		} else {
-			ans[letter] = log
-			letter++
+	sort.SliceStable(logs, func(i, j int) bool {
+		s1 := strings.SplitN(logs[i], " ", 2)[1]
+		s2 := strings.SplitN(logs[j], " ", 2)[1]
+		isDigit1 := unicode.IsDigit(rune(s1[0]))
+		isDigit2 := unicode.IsDigit(rune(s2[0]))
+		if isDigit1 && isDigit2 {
+			return false
 		}
-	}
-	letterLog := ans[:letter]
-	sort.Slice(letterLog, func(i, j int) bool {
-		s1, s2 := strings.IndexByte(letterLog[i], ' '), strings.IndexByte(letterLog[j], ' ')
-		if letterLog[i][s1+1:] != letterLog[j][s2+1:] {
-			return letterLog[i][s1+1:] < letterLog[j][s2+1:]
-		} else {
-			return letterLog[i][:s1] < letterLog[j][:s2]
+		if !isDigit1 && !isDigit2 {
+			return s1 < s2 || s1 == s2 && logs[i] < logs[j]
 		}
+		return !isDigit1
 	})
-	for i, j := letter, n-1; i < j; i, j = i+1, j-1 {
-		ans[i], ans[j] = ans[j], ans[i]
-	}
-	return ans
+	return logs
 }
 
 // @lc code=end
