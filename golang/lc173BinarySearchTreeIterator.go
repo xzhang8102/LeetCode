@@ -16,31 +16,26 @@ package golang
  * }
  */
 type BSTIterator struct {
+	curr  *TreeNode
 	stack []*TreeNode
 }
 
 func Constructor(root *TreeNode) BSTIterator {
-	iter := BSTIterator{}
-	for root != nil {
-		iter.stack = append(iter.stack, root)
-		root = root.Left
-	}
-	return iter
+	return BSTIterator{curr: root}
 }
 
 func (this *BSTIterator) Next() int {
+	for node := this.curr; node != nil; node = node.Left {
+		this.stack = append(this.stack, node)
+	}
 	top := this.stack[len(this.stack)-1]
 	this.stack = this.stack[:len(this.stack)-1]
-	node := top.Right
-	for node != nil {
-		this.stack = append(this.stack, node)
-		node = node.Left
-	}
+	this.curr = top.Right
 	return top.Val
 }
 
 func (this *BSTIterator) HasNext() bool {
-	return len(this.stack) > 0
+	return this.curr != nil || len(this.stack) > 0
 }
 
 /**
