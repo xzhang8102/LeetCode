@@ -1,10 +1,5 @@
 package golang
 
-import (
-	"strconv"
-	"strings"
-)
-
 /*
  * @lc app=leetcode.cn id=165 lang=golang
  *
@@ -13,50 +8,26 @@ import (
 
 // @lc code=start
 func compareVersion(version1 string, version2 string) int {
-	v1, v2 := lc165Parse(version1), lc165Parse(version2)
-	i, j := 0, 0
-	for i < len(v1) && j < len(v2) {
-		if v1[i] < v2[j] {
+	n1, n2 := len(version1), len(version2)
+	for i, j := 0, 0; i < n1 || j < n2; i, j = i+1, j+1 {
+		x := 0
+		for i < n1 && version1[i] != '.' {
+			x = x*10 + int(version1[i]-'0')
+			i++
+		}
+		y := 0
+		for j < n2 && version2[j] != '.' {
+			y = y*10 + int(version2[j]-'0')
+			j++
+		}
+		if x < y {
 			return -1
 		}
-		if v1[i] > v2[j] {
+		if x > y {
 			return 1
-		}
-		i, j = i+1, j+1
-	}
-	if i < len(v1) {
-		for _, v := range v1[i:] {
-			if v != 0 {
-				return 1
-			}
-		}
-	}
-	if j < len(v2) {
-		for _, v := range v2[j:] {
-			if v != 0 {
-				return -1
-			}
 		}
 	}
 	return 0
-}
-
-func lc165Parse(version string) []int {
-	ans := []int{}
-	var dot int
-	for {
-		dot = strings.IndexByte(version, '.')
-		var val int
-		if dot == -1 {
-			val, _ = strconv.Atoi(version)
-			ans = append(ans, val)
-			break
-		}
-		val, _ = strconv.Atoi(version[:dot])
-		ans = append(ans, val)
-		version = version[dot+1:]
-	}
-	return ans
 }
 
 // @lc code=end
