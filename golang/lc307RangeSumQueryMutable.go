@@ -12,7 +12,7 @@ type NumArray struct {
 	tree []int
 }
 
-func Constructor(nums []int) NumArray {
+func lc307Constructor(nums []int) NumArray {
 	arr := NumArray{
 		nums,
 		make([]int, len(nums)+1),
