@@ -8,19 +8,23 @@ package golang
 
 // @lc code=start
 func numSubarrayProductLessThanK(nums []int, k int) int {
+	n := len(nums)
+	left, right := 0, 0
 	ans := 0
-	if k <= 1 {
-		return ans
-	}
 	product := 1
-	left := 0
-	for right, n := range nums {
-		product *= n
-		for product >= k {
-			product /= nums[left]
+	for right < n {
+		if product*nums[right] < k {
+			ans += right - left + 1 // valid subarray end with nums[right]
+			product *= nums[right]
+			right++
+		} else {
+			if left == right {
+				right++
+			} else {
+				product /= nums[left]
+			}
 			left++
 		}
-		ans += right - left + 1
 	}
 	return ans
 }
