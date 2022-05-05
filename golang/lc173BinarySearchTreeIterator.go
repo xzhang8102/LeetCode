@@ -20,7 +20,7 @@ type BSTIterator struct {
 	stack []*TreeNode
 }
 
-func Constructor(root *TreeNode) BSTIterator {
+func lc173Constructor(root *TreeNode) BSTIterator {
 	return BSTIterator{curr: root}
 }
 
