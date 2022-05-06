@@ -18,31 +18,55 @@ func minMutation(start string, end string, bank []string) int {
 	if start == end {
 		return 0
 	}
-	q := []string{start}
-	visited := map[string]bool{}
-	dist := 0
-	for len(q) > 0 {
-		tmp := q
-		q = nil
+	qBegin := []string{start}
+	qEnd := []string{end}
+	seenBegin := map[string]int{start: 0}
+	seenEnd := map[string]int{end: 0}
+	distBegin := 0
+	distEnd := 0
+	for len(qBegin) > 0 || len(qEnd) > 0 {
+		tmp := qBegin
+		qBegin = nil
 		for _, gene := range tmp {
-			if gene == end {
-				return dist
+			if d, ok := seenEnd[gene]; ok {
+				return d + distBegin
 			}
-			visited[gene] = true
 			buf := []byte(gene)
 			for i := 0; i < 8; i++ {
 				g := buf[i]
 				for _, c := range "ACGT" {
 					buf[i] = byte(c)
 					s := string(buf)
-					if set[s] && !visited[s] {
-						q = append(q, s)
+					if _, seen := seenBegin[s]; set[s] && !seen {
+						seenBegin[s] = distBegin + 1
+						qBegin = append(qBegin, s)
 					}
 				}
 				buf[i] = g
 			}
 		}
-		dist++
+		distBegin++
+		tmp = qEnd
+		qEnd = nil
+		for _, gene := range tmp {
+			if d, ok := seenBegin[gene]; ok {
+				return d + distEnd
+			}
+			buf := []byte(gene)
+			for i := 0; i < 8; i++ {
+				g := buf[i]
+				for _, c := range "ACGT" {
+					buf[i] = byte(c)
+					s := string(buf)
+					if _, seen := seenEnd[s]; set[s] && !seen {
+						seenEnd[s] = distEnd + 1
+						qEnd = append(qEnd, s)
+					}
+				}
+				buf[i] = g
+			}
+		}
+		distEnd++
 	}
 	return -1
 }
