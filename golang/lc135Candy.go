@@ -9,33 +9,37 @@ package golang
 // @lc code=start
 func candy(ratings []int) int {
 	n := len(ratings)
-	left := make([]int, n)
-	left[0] = 1
+	dec := 1
+	ans := 1
+	pre := 1
 	for i := 1; i < n; i++ {
-		if ratings[i] > ratings[i-1] {
-			left[i] = left[i-1] + 1
+		if ratings[i] >= ratings[i-1] {
+			if dec > 1 {
+				// start: 1, end: dec - 1, length: dec - 1
+				ans += dec * (dec - 1) / 2
+				if dec > pre {
+					ans += dec - pre
+				}
+				pre = 1
+			}
+			dec = 1
+			if ratings[i] == ratings[i-1] {
+				pre = 1
+			} else {
+				pre++
+			}
+			ans += pre
 		} else {
-			left[i] = 1
+			dec++
 		}
 	}
-	right := 1
-	ans := lc135Max(right, left[n-1])
-	for i := n - 2; i >= 0; i-- {
-		if ratings[i] > ratings[i+1] {
-			right++
-		} else {
-			right = 1
+	if dec > 1 {
+		ans += dec * (dec - 1) / 2
+		if dec > pre {
+			ans += dec - pre
 		}
-		ans += lc135Max(right, left[i])
 	}
 	return ans
-}
-
-func lc135Max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }
 
 // @lc code=end
