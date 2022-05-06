@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func wordBreak(s string, wordDict []string) bool {
+func lc139wordBreak(s string, wordDict []string) bool {
 	dp := make([]bool, len(s)+1)
 	dp[0] = true
 	for i := 1; i <= len(s); i++ {
