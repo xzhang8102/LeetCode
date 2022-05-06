@@ -8,46 +8,41 @@ package golang
 
 // @lc code=start
 func minMutation(start string, end string, bank []string) int {
-	graph := map[string][]string{}
-	add := func(gene string) {
-		buf := []byte(gene)
-		for i := 0; i < 8; i++ {
-			g := buf[i]
-			buf[i] = '*'
-			match := string(buf)
-			graph[gene] = append(graph[gene], match)
-			graph[match] = append(graph[match], gene)
-			buf[i] = g
-		}
+	set := map[string]bool{}
+	for _, g := range bank {
+		set[g] = true
 	}
-	for _, gene := range bank {
-		add(gene)
-	}
-	if graph[end] == nil {
+	if !set[end] {
 		return -1
 	}
 	if start == end {
 		return 0
 	}
-	add(start)
 	q := []string{start}
-	visited := map[string]bool{start: true}
+	visited := map[string]bool{}
 	dist := 0
 	for len(q) > 0 {
 		tmp := q
 		q = nil
-		dist++
 		for _, gene := range tmp {
 			if gene == end {
-				return dist / 2
+				return dist
 			}
-			for _, next := range graph[gene] {
-				if !visited[next] {
-					visited[next] = true
-					q = append(q, next)
+			visited[gene] = true
+			buf := []byte(gene)
+			for i := 0; i < 8; i++ {
+				g := buf[i]
+				for _, c := range "ACGT" {
+					buf[i] = byte(c)
+					s := string(buf)
+					if set[s] && !visited[s] {
+						q = append(q, s)
+					}
 				}
+				buf[i] = g
 			}
 		}
+		dist++
 	}
 	return -1
 }
