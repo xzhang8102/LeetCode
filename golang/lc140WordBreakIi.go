@@ -10,32 +10,38 @@ import "strings"
 
 // @lc code=start
 func wordBreak(s string, wordDict []string) []string {
-	ans := []string{}
 	dict := map[string]bool{}
 	for _, word := range wordDict {
 		dict[word] = true
 	}
 	n := len(s)
-	pick := []int{0}
-	var backtrack func(start int)
-	backtrack = func(start int) {
-		if start == n {
-			tmp := make([]string, 0, len(pick))
-			for i := 1; i < len(pick); i++ {
-				tmp = append(tmp, s[pick[i-1]:pick[i]])
-			}
-			ans = append(ans, strings.Join(tmp, " "))
-			return
+	dp := make([][][]string, n)
+	var backtrack func(start int) [][]string
+	backtrack = func(start int) [][]string {
+		if dp[start] != nil {
+			return dp[start]
 		}
+		ret := [][]string{}
 		for i := start; i < n; i++ {
-			if dict[s[start:i+1]] {
-				pick = append(pick, i+1)
-				backtrack(i + 1)
-				pick = pick[:len(pick)-1]
+			word := s[start : i+1]
+			if dict[word] {
+				if i == n-1 {
+					ret = append(ret, []string{word})
+				} else {
+					for _, words := range backtrack(i + 1) {
+						ret = append(ret, append([]string{word}, words...))
+					}
+				}
 			}
 		}
+		dp[start] = ret
+		return ret
 	}
+	ans := []string{}
 	backtrack(0)
+	for _, words := range dp[0] {
+		ans = append(ans, strings.Join(words, " "))
+	}
 	return ans
 }
 
