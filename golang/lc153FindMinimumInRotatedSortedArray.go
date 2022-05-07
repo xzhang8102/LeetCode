@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func findMin(nums []int) int {
+func lc153findMin(nums []int) int {
 	n := len(nums)
 	lo, hi := 0, n-1
 	rotated := nums[0] > nums[n-1]
