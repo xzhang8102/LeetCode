@@ -1,7 +1,5 @@
 package golang
 
-import "math"
-
 /*
  * @lc app=leetcode.cn id=414 lang=golang
  *
@@ -10,27 +8,25 @@ import "math"
 
 // @lc code=start
 func thirdMax(nums []int) int {
-	first, second, third := math.MinInt64, math.MinInt64, math.MinInt64
+	var first, second, third *int
 	for _, num := range nums {
-		if num > first {
-			third = second
-			second = first
-			first = num
-		} else if num != first {
-			if num > second {
-				third = second
-				second = num
-			} else if num != second {
-				if num > third {
-					third = num
+		n := num
+		if first == nil || n > *first {
+			first, second, third = &n, first, second
+		} else if n < *first {
+			if second == nil || n > *second {
+				second, third = &n, second
+			} else if n < *second {
+				if third == nil || n > *third {
+					third = &n
 				}
 			}
 		}
 	}
-	if third == math.MinInt64 {
-		return first
+	if third == nil {
+		return *first
 	}
-	return third
+	return *third
 }
 
 // @lc code=end
