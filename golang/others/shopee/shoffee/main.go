@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// description: https://leetcode-cn.com/problems/bk9ocA/
+// description: https://leetcode.cn/problems/bk9ocA/
 
 func main() {
 	var N, K int

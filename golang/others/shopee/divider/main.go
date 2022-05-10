@@ -1,7 +1,5 @@
 package main
 
-// description: https://leetcode-cn.com/problems/VdG6tT/
-
 import (
 	"bufio"
 	"fmt"
@@ -9,6 +7,8 @@ import (
 	"os"
 	"strconv"
 )
+
+// description: https://leetcode.cn/problems/VdG6tT/
 
 func main() {
 	sc := bufio.NewScanner(os.Stdin)
