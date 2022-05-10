@@ -20,7 +20,7 @@ package golang
  * read4(buf4) // read4 returns 3. Now buf = ['i','j','k',...], fp points to end of file
  */
 
-var solution = func(read4 func([]byte) int) func([]byte, int) int {
+var lc157solution = func(read4 func([]byte) int) func([]byte, int) int {
 	// implement read below.
 	return func(buf []byte, n int) int {
 		total := 0
