@@ -1,5 +1,7 @@
 package golang
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=174 lang=golang
  *
@@ -9,54 +11,17 @@ package golang
 // @lc code=start
 func calculateMinimumHP(dungeon [][]int) int {
 	n, m := len(dungeon), len(dungeon[0])
-	dp := make([][]int, n)
+	dp := make([][]int, n+1)
 	for i := range dp {
-		dp[i] = make([]int, m)
+		dp[i] = make([]int, m+1)
+		for j := range dp[i] {
+			dp[i][j] = math.MaxInt64
+		}
 	}
+	dp[n][m-1], dp[n-1][m] = 1, 1
 	for i := n - 1; i >= 0; i-- {
-		if i == n-1 {
-			for j := m - 1; j >= 0; j-- {
-				if dungeon[i][j] <= 0 {
-					if j < m-1 {
-						dp[i][j] = dp[i][j+1] - dungeon[i][j]
-					} else {
-						dp[i][j] = 1 - dungeon[i][j]
-					}
-				} else {
-					if j < m-1 {
-						dp[i][j] = dp[i][j+1] - dungeon[i][j]
-						if dp[i][j] < 1 {
-							dp[i][j] = 1
-						}
-					} else {
-						dp[i][j] = 1
-					}
-				}
-			}
-		} else {
-			if dungeon[i][m-1] <= 0 {
-				dp[i][m-1] = dp[i+1][m-1] - dungeon[i][m-1]
-			} else {
-				dp[i][m-1] = dp[i+1][m-1] - dungeon[i][m-1]
-				if dp[i][m-1] < 1 {
-					dp[i][m-1] = 1
-				}
-			}
-			for j := m - 2; j >= 0; j-- {
-				if dungeon[i][j] <= 0 {
-					dp[i][j] = lc174Min(dp[i+1][j]-dungeon[i][j], dp[i][j+1]-dungeon[i][j])
-				} else {
-					v1 := dp[i+1][j] - dungeon[i][j]
-					if v1 < 1 {
-						v1 = 1
-					}
-					v2 := dp[i][j+1] - dungeon[i][j]
-					if v2 < 1 {
-						v2 = 1
-					}
-					dp[i][j] = lc174Min(v1, v2)
-				}
-			}
+		for j := m - 1; j >= 0; j-- {
+			dp[i][j] = lc174Max(1, lc174Min(dp[i+1][j], dp[i][j+1])-dungeon[i][j])
 		}
 	}
 	return dp[0][0]
