@@ -60,14 +60,20 @@ func (this *Codec) deserialize(data string) *TreeNode {
 			return nil
 		}
 		root := &TreeNode{Val: vals[start]}
-		next := start + 1
-		for ; next <= end; next++ {
-			if vals[next] > vals[start] {
-				break
+		lo, hi := start+1, end
+		for lo < hi {
+			mid := lo + (hi-lo)>>1
+			if vals[mid] > vals[start] {
+				hi = mid
+			} else {
+				lo = mid + 1
 			}
 		}
-		root.Left = build(start+1, next-1)
-		root.Right = build(next, end)
+		if vals[hi] <= vals[start] {
+			hi++
+		}
+		root.Left = build(start+1, hi-1)
+		root.Right = build(hi, end)
 		return root
 	}
 	return build(0, len(vals)-1)
