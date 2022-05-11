@@ -11,7 +11,7 @@ type RecentCounter struct {
 	queue []int
 }
 
-func Constructor() RecentCounter {
+func lc933Constructor() RecentCounter {
 	return RecentCounter{}
 }
 
