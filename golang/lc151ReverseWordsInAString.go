@@ -9,7 +9,7 @@ import "strings"
  */
 
 // @lc code=start
-func reverseWords(s string) string {
+func lc151reverseWords(s string) string {
 	arr := strings.Split(s, " ")
 	ans := make([]string, 0, len(arr))
 	for _, word := range arr {
