@@ -7,7 +7,7 @@ package golang
  */
 
 // @lc code=start
-func maxProfit(prices []int) int {
+func lc122maxProfit(prices []int) int {
 	n := len(prices)
 	dp := make([][2]int, n)
 	dp[0] = [2]int{0, -prices[0]}
