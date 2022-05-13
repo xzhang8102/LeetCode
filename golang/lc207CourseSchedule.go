@@ -9,31 +9,34 @@ package golang
 // @lc code=start
 func canFinish(numCourses int, prerequisites [][]int) bool {
 	graph := map[int][]int{}
-	inDegree := make([]int, numCourses)
+	visited := make([]int, numCourses)
+	valid := true
 	for _, pre := range prerequisites {
 		to, from := pre[0], pre[1]
 		graph[from] = append(graph[from], to)
-		inDegree[to]++
 	}
-	q := make([]int, 0, numCourses)
-	for i := 0; i < numCourses; i++ {
-		if inDegree[i] == 0 {
-			q = append(q, i)
-		}
-	}
-	learnt := 0
-	for len(q) > 0 {
-		course := q[0]
-		learnt++
-		q = q[1:]
-		for _, next := range graph[course] {
-			inDegree[next]--
-			if inDegree[next] == 0 {
-				q = append(q, next)
+	var dfs func(start int)
+	dfs = func(start int) {
+		visited[start] = 1
+		for _, next := range graph[start] {
+			if visited[next] == 0 {
+				dfs(next)
+				if !valid {
+					return
+				}
+			} else if visited[next] == 1 {
+				valid = false
+				return
 			}
 		}
+		visited[start] = 2
 	}
-	return learnt == numCourses
+	for i := 0; i < numCourses; i++ {
+		if visited[i] == 0 {
+			dfs(i)
+		}
+	}
+	return valid
 }
 
 // @lc code=end
