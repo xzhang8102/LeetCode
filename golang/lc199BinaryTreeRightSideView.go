@@ -20,19 +20,37 @@ func rightSideView(root *TreeNode) []int {
 	if root == nil {
 		return ans
 	}
-	q := []*TreeNode{root}
-	for len(q) > 0 {
-		ans = append(ans, q[len(q)-1].Val)
-		tmp := q
-		q = nil
-		for _, node := range tmp {
-			if node.Left != nil {
-				q = append(q, node.Left)
-			}
-			if node.Right != nil {
-				q = append(q, node.Right)
-			}
+	record := map[int]*TreeNode{}
+	depth := -1
+	stack := []struct {
+		node  *TreeNode
+		depth int
+	}{{root, 0}}
+	for len(stack) > 0 {
+		top := stack[len(stack)-1]
+		node, d := top.node, top.depth
+		stack = stack[:len(stack)-1]
+		if d > depth {
+			depth = d
 		}
+		if _, ok := record[d]; !ok {
+			record[d] = node
+		}
+		if node.Left != nil {
+			stack = append(stack, struct {
+				node  *TreeNode
+				depth int
+			}{node.Left, d + 1})
+		}
+		if node.Right != nil {
+			stack = append(stack, struct {
+				node  *TreeNode
+				depth int
+			}{node.Right, d + 1})
+		}
+	}
+	for i := 0; i <= depth; i++ {
+		ans = append(ans, record[i].Val)
 	}
 	return ans
 }
