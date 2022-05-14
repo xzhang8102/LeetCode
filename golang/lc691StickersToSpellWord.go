@@ -1,7 +1,5 @@
 package golang
 
-import "strings"
-
 /*
  * @lc app=leetcode.cn id=691 lang=golang
  *
@@ -10,47 +8,49 @@ import "strings"
 
 // @lc code=start
 func minStickers(stickers []string, target string) int {
-	set := map[rune]bool{}
-	for _, ch := range target {
-		set[ch] = true
+	n := len(target)
+	dp := make([]int, 1<<n)
+	for i := range dp {
+		dp[i] = -1
 	}
-	n := len(stickers)
-	available := make([]map[rune]int, 0, n)
-	for _, sticker := range stickers {
-		cnt := map[rune]int{}
-		for _, ch := range sticker {
-			if set[ch] {
-				cnt[ch]++
-			}
+	var dfs func(state int) int
+	dfs = func(state int) int {
+		if state == (1<<n)-1 {
+			return 0
 		}
-		if len(cnt) > 0 {
-			available = append(available, cnt)
+		if dp[state] != -1 {
+			return dp[state]
 		}
-	}
-	q, visited := []string{target}, map[string]int{target: 0}
-	for len(q) > 0 {
-		curr := q[0]
-		q = q[1:]
-		for _, avl := range available {
-			for _, char := range curr {
-				if avl[char] > 0 {
-					next := curr
-					for c, cnt := range avl {
-						next = strings.Replace(next, string(c), "", cnt)
+		dp[state] = n + 1
+		for _, sticker := range stickers {
+			next := state
+		out:
+			for _, ch := range sticker {
+				for i := 0; i < n; i++ {
+					if target[i] == byte(ch) && (next>>i)&1 == 0 {
+						next |= 1 << i
+						continue out
 					}
-					if next == "" {
-						return visited[curr] + 1
-					}
-					if _, ok := visited[next]; !ok {
-						q = append(q, next)
-						visited[next] = visited[curr] + 1
-					}
-					break
 				}
 			}
+			if next != state {
+				dp[state] = lc691Min(dp[state], dfs(next)+1)
+			}
 		}
+		return dp[state]
 	}
-	return -1
+	ans := dfs(0)
+	if ans == n+1 {
+		return -1
+	}
+	return ans
+}
+
+func lc691Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 // @lc code=end
