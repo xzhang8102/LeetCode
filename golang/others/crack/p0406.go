@@ -7,26 +7,18 @@ type TreeNode struct {
 }
 
 func inorderSuccessor(root *TreeNode, p *TreeNode) *TreeNode {
-	if root == nil || p == nil {
+	if p == nil {
 		return nil
 	}
-	if root.Val == p.Val {
-		if root.Right == nil {
-			return nil
-		}
-		ptr := root.Right
-		for ptr.Left != nil {
+	var ans *TreeNode
+	ptr := root
+	for ptr != nil {
+		if ptr.Val > p.Val {
+			ans = ptr
 			ptr = ptr.Left
-		}
-		return ptr
-	} else if root.Val > p.Val {
-		next := inorderSuccessor(root.Left, p)
-		if next == nil {
-			return root
 		} else {
-			return next
+			ptr = ptr.Right
 		}
-	} else {
-		return inorderSuccessor(root.Right, p)
 	}
+	return ans
 }
