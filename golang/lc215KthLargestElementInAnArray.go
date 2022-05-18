@@ -14,14 +14,21 @@ import (
 // @lc code=start
 func findKthLargest(nums []int, k int) int {
 	rand.Seed(time.Now().UnixNano())
-	lc215QuickSort(nums, 0, len(nums)-1)
-	return nums[len(nums)-k]
+	return lc215QuickSelect(nums, 0, len(nums)-1, len(nums)-k)
 }
 
-func lc215QuickSort(nums []int, start, end int) {
-	if start >= end {
-		return
+func lc215QuickSelect(nums []int, start, end, target int) int {
+	idx := lc215RandomPartition(nums, start, end)
+	if idx == target {
+		return nums[idx]
+	} else if idx < target {
+		return lc215QuickSelect(nums, idx+1, end, target)
+	} else {
+		return lc215QuickSelect(nums, start, idx-1, target)
 	}
+}
+
+func lc215RandomPartition(nums []int, start, end int) int {
 	idx := rand.Int()%(end-start+1) + start
 	nums[idx], nums[end] = nums[end], nums[idx]
 	val := nums[end]
@@ -33,8 +40,7 @@ func lc215QuickSort(nums []int, start, end int) {
 		}
 	}
 	nums[i+1], nums[end] = nums[end], nums[i+1]
-	lc215QuickSort(nums, start, i)
-	lc215QuickSort(nums, i+2, end)
+	return i + 1
 }
 
 // @lc code=end
