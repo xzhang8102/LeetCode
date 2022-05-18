@@ -12,7 +12,7 @@ import (
  */
 
 // @lc code=start
-func findKthNumber(n int, k int) int {
+func lc440findKthNumber(n int, k int) int {
 	ans := 1
 	for k > 1 {
 		cnt := lc440PrifixCnt(ans, n)
