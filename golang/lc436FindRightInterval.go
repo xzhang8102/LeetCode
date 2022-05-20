@@ -10,18 +10,30 @@ import "sort"
 
 // @lc code=start
 func findRightInterval(intervals [][]int) []int {
-	for i := range intervals {
-		intervals[i] = append(intervals[i], i)
-	}
-	sort.Slice(intervals, func(i, j int) bool { return intervals[i][0] < intervals[j][0] })
 	n := len(intervals)
+	sortStart, sortEnd := make([]struct{ val, i int }, n), make([]struct{ val, i int }, n)
+	for i, interval := range intervals {
+		sortStart[i] = struct {
+			val int
+			i   int
+		}{interval[0], i}
+		sortEnd[i] = struct {
+			val int
+			i   int
+		}{interval[1], i}
+	}
+	sort.Slice(sortStart, func(i, j int) bool { return sortStart[i].val < sortStart[j].val })
+	sort.Slice(sortEnd, func(i, j int) bool { return sortEnd[i].val < sortEnd[j].val })
 	ans := make([]int, n)
-	for _, interval := range intervals {
-		idx := sort.Search(n, func(i int) bool { return intervals[i][0] >= interval[1] })
-		if idx < n {
-			ans[interval[2]] = intervals[idx][2]
+	ptr := 0
+	for _, p := range sortEnd {
+		for ptr < n && sortStart[ptr].val < p.val {
+			ptr++
+		}
+		if ptr < n {
+			ans[p.i] = sortStart[ptr].i
 		} else {
-			ans[interval[2]] = -1
+			ans[p.i] = -1
 		}
 	}
 	return ans
