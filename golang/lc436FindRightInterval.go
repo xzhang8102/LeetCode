@@ -1,5 +1,7 @@
 package golang
 
+import "sort"
+
 /*
  * @lc app=leetcode.cn id=436 lang=golang
  *
@@ -8,31 +10,18 @@ package golang
 
 // @lc code=start
 func findRightInterval(intervals [][]int) []int {
+	for i := range intervals {
+		intervals[i] = append(intervals[i], i)
+	}
+	sort.Slice(intervals, func(i, j int) bool { return intervals[i][0] < intervals[j][0] })
 	n := len(intervals)
 	ans := make([]int, n)
-	for i := range ans {
-		ans[i] = -1
-	}
-	collect := map[int]int{}
-	maxStart := int(-1e6 - 1)
-	for i, interval := range intervals {
-		start := interval[0]
-		if start > maxStart {
-			maxStart = start
-		}
-		collect[start] = i
-	}
-	for i := range ans {
-		end := intervals[i][1]
-		if end > maxStart {
-			ans[i] = -1
+	for _, interval := range intervals {
+		idx := sort.Search(n, func(i int) bool { return intervals[i][0] >= interval[1] })
+		if idx < n {
+			ans[interval[2]] = intervals[idx][2]
 		} else {
-			for j := end; j <= maxStart; j++ {
-				if start, ok := collect[j]; ok {
-					ans[i] = start
-					break
-				}
-			}
+			ans[interval[2]] = -1
 		}
 	}
 	return ans
