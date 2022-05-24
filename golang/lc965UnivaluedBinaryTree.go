@@ -19,7 +19,22 @@ func isUnivalTree(root *TreeNode) bool {
 	if root == nil {
 		return false
 	}
-	return (root.Left == nil || root.Left.Val == root.Val && isUnivalTree(root.Left)) && (root.Right == nil || root.Right.Val == root.Val && isUnivalTree(root.Right))
+	val := root.Val
+	q := []*TreeNode{root}
+	for len(q) > 0 {
+		head := q[0]
+		q = q[1:]
+		if head.Val != val {
+			return false
+		}
+		if head.Left != nil {
+			q = append(q, head.Left)
+		}
+		if head.Right != nil {
+			q = append(q, head.Right)
+		}
+	}
+	return true
 }
 
 // @lc code=end
