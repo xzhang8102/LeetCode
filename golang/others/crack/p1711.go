@@ -3,23 +3,20 @@ package crack
 // https://leetcode.cn/problems/find-closest-lcci/
 
 func findClosest(words []string, word1 string, word2 string) int {
-	dict := map[string][]int{}
-	for i, word := range words {
-		dict[word] = append(dict[word], i)
+	if word1 == word2 {
+		return 0
 	}
+	p1, p2 := -1, -1
 	ans := len(words)
-	i, j := 0, 0
-	s1, s2 := dict[word1], dict[word2]
-	for i < len(s1) && j < len(s2) {
-		if s1[i] == s2[j] {
-			return 0
+	for i, word := range words {
+		if word == word1 {
+			p1 = i
 		}
-		if s1[i] < s2[j] {
-			ans = min(ans, s2[j]-s1[i])
-			i++
-		} else {
-			ans = min(ans, s1[i]-s2[j])
-			j++
+		if word == word2 {
+			p2 = i
+		}
+		if p1 != -1 && p2 != -1 {
+			ans = min(abs(p1-p2), ans)
 		}
 	}
 	return ans
@@ -30,4 +27,11 @@ func min(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
 }
