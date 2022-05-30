@@ -15,26 +15,33 @@ package golang
  *     Right *TreeNode
  * }
  */
-func sumRootToLeaf(root *TreeNode) int {
-	ans := 0
-	var dfs func(node *TreeNode, sum int)
-	dfs = func(node *TreeNode, sum int) {
-		if node == nil {
-			return
+func sumRootToLeaf(root *TreeNode) (ans int) {
+	if root == nil {
+		return
+	}
+	q := []struct {
+		node *TreeNode
+		sum  int
+	}{{root, root.Val}}
+	for len(q) > 0 {
+		head := q[0]
+		q = q[1:]
+		if head.node.Left == nil && head.node.Right == nil {
+			ans += head.sum
 		}
-		sum = sum*2 + node.Val
-		if node.Left == nil && node.Right == nil {
-			ans += sum
-			return
+		if head.node.Left != nil {
+			q = append(q, struct {
+				node *TreeNode
+				sum  int
+			}{head.node.Left, head.sum*2 + head.node.Left.Val})
 		}
-		if node.Left != nil {
-			dfs(node.Left, sum)
-		}
-		if node.Right != nil {
-			dfs(node.Right, sum)
+		if head.node.Right != nil {
+			q = append(q, struct {
+				node *TreeNode
+				sum  int
+			}{head.node.Right, head.sum*2 + head.node.Right.Val})
 		}
 	}
-	dfs(root, 0)
 	return ans
 }
 
