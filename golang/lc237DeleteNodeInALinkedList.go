@@ -14,7 +14,7 @@ package golang
  *     Next *ListNode
  * }
  */
-func deleteNode(node *ListNode) {
+func lc237deleteNode(node *ListNode) {
 	ptr := node.Next
 	node.Val = ptr.Val
 	node.Next = ptr.Next
