@@ -7,42 +7,44 @@ package golang
  */
 
 // @lc code=start
-/**
- * Definition for a binary tree node.
- * type TreeNode struct {
- *     Val int
- *     Left *TreeNode
- *     Right *TreeNode
- * }
- */
 func deleteNode(root *TreeNode, key int) *TreeNode {
-	if root == nil {
-		return nil
-	}
-	if root.Val == key {
-		if root.Left == nil && root.Right == nil {
-			return nil
-		} else if root.Left == nil {
-			return root.Right
-		} else if root.Right == nil {
-			return root.Left
-		} else {
-			left := root.Left
-			newNode := root.Right
-			ptr := newNode
-			for ptr.Left != nil {
-				ptr = ptr.Left
-			}
-			ptr.Left = left
-			return newNode
+	var curr, parent *TreeNode = root, nil
+	for curr != nil && curr.Val != key {
+		parent = curr
+		if curr.Val > key {
+			curr = curr.Left
+		} else if curr.Val < key {
+			curr = curr.Right
 		}
-	} else if root.Val < key {
-		root.Right = deleteNode(root.Right, key)
-		return root
-	} else {
-		root.Left = deleteNode(root.Left, key)
+	}
+	if curr == nil {
 		return root
 	}
+	if curr.Left == nil && curr.Right == nil {
+		curr = nil
+	} else if curr.Right == nil {
+		curr = curr.Left
+	} else if curr.Left == nil {
+		curr = curr.Right
+	} else {
+		left := curr.Left
+		curr = curr.Right
+		ptr := curr
+		for ptr.Left != nil {
+			ptr = ptr.Left
+		}
+		ptr.Left = left
+	}
+	if parent == nil {
+		return curr
+	}
+	if parent.Left != nil && parent.Left.Val == key {
+		parent.Left = curr
+	}
+	if parent.Right != nil && parent.Right.Val == key {
+		parent.Right = curr
+	}
+	return root
 }
 
 // @lc code=end
