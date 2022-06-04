@@ -9,13 +9,13 @@ import "math/rand"
  */
 
 // @lc code=start
-type Solution []int
+type lc398Solution []int
 
-func lc398Constructor(nums []int) Solution {
+func lc398Constructor(nums []int) lc398Solution {
 	return nums
 }
 
-func (this *Solution) Pick(target int) int {
+func (this *lc398Solution) Pick(target int) int {
 	cnt := 0
 	ans := 0
 	for i, num := range *this {

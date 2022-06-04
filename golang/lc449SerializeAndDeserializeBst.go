@@ -24,7 +24,7 @@ import (
 type Codec struct {
 }
 
-func Constructor() Codec {
+func lc449Constructor() Codec {
 	return Codec{}
 }
 
