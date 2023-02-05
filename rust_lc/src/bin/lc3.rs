@@ -13,28 +13,16 @@ impl Solution {
         if n <= 1 {
             return n as i32;
         }
-        let mut left = 0;
-        let mut right = 1;
-        let mut res = 1;
+        let (mut left, mut right, mut res) = (0, 0, 0);
         let bytes = s.as_bytes();
         let mut dict: HashMap<u8, usize> = HashMap::new();
-        dict.insert(bytes[0], 0);
         while right < n {
             let c = &bytes[right];
-            match dict.get(c) {
-                Some(index) => {
-                    let tmp = *index;
-                    for i in left..tmp {
-                        dict.remove(&bytes[i]);
-                    }
-                    dict.insert(*c, right);
-                    left = tmp + 1;
-                }
-                None => {
-                    dict.insert(*c, right);
-                    res = if dict.len() > res { dict.len() } else { res };
-                }
+            if let Some(index) = dict.get(c) {
+                left = left.max(*index + 1);
             }
+            dict.insert(*c, right);
+            res = res.max(right - left + 1);
             right += 1;
         }
         res as i32
@@ -43,6 +31,6 @@ impl Solution {
 // @lc code=end
 
 fn main() {
-    let s = String::from("pwwkew");
-    assert_eq!(3, Solution::length_of_longest_substring(s));
+    let s = String::from("abba");
+    assert_eq!(2, Solution::length_of_longest_substring(s));
 }
