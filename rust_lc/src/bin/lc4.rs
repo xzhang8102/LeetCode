@@ -17,8 +17,12 @@ impl Solution {
         let is_even = (len1 + len2) % 2 == 0;
         let half = ((len1 + len2) >> 1) as i32;
         let (mut lo, mut hi) = (0, len1 as i32);
-        while lo <= hi { // lo == hi == len1 is allowed, so there is a = sign
-            let mid = (lo + hi) >> 1;
+        while lo <= hi { // lo == hi == len1 is allowed, so there goes the `=` sign
+            let mid = (lo + hi) >> 1; //    the element `mid` points to
+                                           //    belongs to the right half
+                                           //     ↓
+                                           // [1, 2]
+                                           // [3, 4]
             let (mut nums1_l, mut nums2_l) = (std::i32::MIN, std::i32::MIN);
             if mid > 0 {
                 nums1_l = nums1[(mid - 1) as usize];
