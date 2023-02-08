@@ -10,7 +10,7 @@ import "strconv"
 
 // @lc code=start
 func lc9isPalindrome(x int) bool {
-	if x < 0 || (x != 0 && x%10 != 0) {
+	if x < 0 || (x != 0 && x%10 == 0) {
 		return false
 	}
 	s := strconv.Itoa(x)
